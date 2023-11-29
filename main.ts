@@ -74,7 +74,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.poopy, function on_on_overlap_en
 })
 function create_level_one() {
     
-    // music.play(assets.song.level_one_bso, music.PlaybackMode.LoopingInBackground)
+    // music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
     scene.setTileMapLevel(tilemap`
         level one
     `)
@@ -87,6 +87,7 @@ function create_level_one() {
     create_enemies()
 }
 
+music.setVolume(40)
 let treasure_sprite : Sprite = null
 let stair_sprite : Sprite = null
 let switch_sprite : Sprite = null

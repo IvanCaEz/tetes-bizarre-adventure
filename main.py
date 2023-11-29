@@ -65,7 +65,7 @@ sprites.on_overlap(SpriteKind.player, SpriteKind.poopy, on_on_overlap_enemy_poop
 
 def create_level_one():
     global treasure_sprite, stair_sprite, switch_sprite
-    #music.play(assets.song.level_one_bso, music.PlaybackMode.LoopingInBackground)
+    #music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
     scene.set_tile_map_level(tilemap("""
         level one
     """))
@@ -76,6 +76,8 @@ def create_level_one():
     switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.goal)
     switch_sprite.set_position(136, 8)
     create_enemies()
+
+music.set_volume(40)
 
 treasure_sprite: Sprite = None
 stair_sprite: Sprite = None
@@ -101,7 +103,6 @@ def on_update_interval():
         else:
             poopy.vy = -20
 game.on_update_interval(500, on_update_interval)
-
 
 create_level_one()
 
