@@ -1,14 +1,17 @@
 @namespace
 class SpriteKind:
     goal = SpriteKind.create()
-    switch_ = SpriteKind.create()
+    #switch = SpriteKind.create()
     treasure = SpriteKind.create()
 
-def on_hit_wall(sprite, location):
-    pass
-scene.on_hit_wall(SpriteKind.player, on_hit_wall)
-
 # level.load(loadedLevel)
+def on_hit_wall(sprite, location):
+    if (location.x == 136 and location.y == 8):
+        info.set_score(200)
+        scene.set_tile_map_level(tilemap("""
+                level one switched
+            """))
+scene.on_hit_wall(SpriteKind.player, on_hit_wall)
 
 def on_on_overlap_goal(SpriteKind, otherSprite):
     if current_level == maxLevel:
@@ -18,22 +21,19 @@ def on_on_overlap_goal(SpriteKind, otherSprite):
         current_level + 1
 sprites.on_overlap(SpriteKind.player, SpriteKind.goal, on_on_overlap_goal)
 
-# width = 160
-# height = 120
 def create_level_one():
     global treasure_sprite, stair_sprite, switch_sprite
-    scene.set_tile_map_level(tilemap("""
-        level one
-    """))
+    scene.set_tile_map_level(tilemap("""level one"""))
     treasure_sprite = sprites.create(sprites.dungeon.chest_closed, SpriteKind.treasure)
     treasure_sprite.set_position(25, 140)
     stair_sprite = sprites.create(sprites.dungeon.stair_large, SpriteKind.goal)
     stair_sprite.set_position(232, 200)
-    switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.switch_)
-    switch_sprite.set_position(136, 8)
+    #switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.switch)
+    #switch_sprite.set_position(136, 8)
 
 def on_on_overlap_treasure(SpriteKind, otherSprite):
     info.set_score(100)
+    treasure_sprite.set_image(sprites.dungeon.chest_open)
 sprites.on_overlap(SpriteKind.player, SpriteKind.treasure, on_on_overlap_treasure)
 
 switch_sprite: Sprite = None
@@ -66,7 +66,7 @@ maxLevel = 3
 create_level_one()
 @namespace
 class Player:
-    player_sprite2 = sprites.create(sprites.duck.duck1, SpriteKind.player)
+    player_sprite = sprites.create(sprites.duck.duck1, SpriteKind.player)
     info.set_life(3)
-    scene.camera_follow_sprite(Player.player_sprite2)
-    controller.move_sprite(Player.player_sprite2, 100, 100)
+    scene.camera_follow_sprite(Player.player_sprite)
+    controller.move_sprite(Player.player_sprite, 100, 100)

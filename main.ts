@@ -1,13 +1,19 @@
 namespace SpriteKind {
     export const goal = SpriteKind.create()
-    export const switch_ = SpriteKind.create()
+    // switch = SpriteKind.create()
     export const treasure = SpriteKind.create()
 }
 
+//  level.load(loadedLevel)
 scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location: tiles.Location) {
+    if (location.x == 136 && location.y == 8) {
+        info.setScore(200)
+        scene.setTileMapLevel(tilemap`
+                level one switched
+            `)
+    }
     
 })
-//  level.load(loadedLevel)
 sprites.onOverlap(SpriteKind.Player, SpriteKind.goal, function on_on_overlap_goal(SpriteKind: Sprite, otherSprite: Sprite) {
     if (current_level == maxLevel) {
         game.over(true)
@@ -17,23 +23,20 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.goal, function on_on_overlap_goa
     }
     
 })
-//  width = 160
-//  height = 120
 function create_level_one() {
     
-    scene.setTileMapLevel(tilemap`
-        level one
-    `)
+    scene.setTileMapLevel(tilemap`level one`)
     treasure_sprite = sprites.create(sprites.dungeon.chestClosed, SpriteKind.treasure)
     treasure_sprite.setPosition(25, 140)
     stair_sprite = sprites.create(sprites.dungeon.stairLarge, SpriteKind.goal)
     stair_sprite.setPosition(232, 200)
-    switch_sprite = sprites.create(sprites.dungeon.greenSwitchUp, SpriteKind.switch_)
-    switch_sprite.setPosition(136, 8)
 }
 
+// switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.switch)
+// switch_sprite.set_position(136, 8)
 sprites.onOverlap(SpriteKind.Player, SpriteKind.treasure, function on_on_overlap_treasure(SpriteKind: Sprite, otherSprite: Sprite) {
     info.setScore(100)
+    treasure_sprite.setImage(sprites.dungeon.chestOpen)
 })
 let switch_sprite : Sprite = null
 let stair_sprite : Sprite = null
@@ -65,9 +68,9 @@ namespace CustomArt {
 maxLevel = 3
 create_level_one()
 namespace Player {
-    export const player_sprite2 = sprites.create(sprites.duck.duck1, SpriteKind.Player)
+    export const player_sprite = sprites.create(sprites.duck.duck1, SpriteKind.Player)
     info.setLife(3)
-    scene.cameraFollowSprite(Player.player_sprite2)
-    controller.moveSprite(Player.player_sprite2, 100, 100)
+    scene.cameraFollowSprite(Player.player_sprite)
+    controller.moveSprite(Player.player_sprite, 100, 100)
 }
 
