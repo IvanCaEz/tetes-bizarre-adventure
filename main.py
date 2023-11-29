@@ -1,45 +1,71 @@
 @namespace
 class SpriteKind:
     goal = SpriteKind.create()
-    # switch = SpriteKind.create()
     treasure = SpriteKind.create()
+    switch = SpriteKind.create()
+    poopy = SpriteKind.create()
 
+# On hit wall
 def on_hit_wall(sprite, location):
-    if location.x == 136 and location.y == 8:
-        info.set_score(200)
-        scene.set_tile_map_level(tilemap("""
-            level one switched
-        """))
-        pause(500)
-        scene.camera_shake(3, 500)
+    print(current_level)
+    if current_level == 1:
+        if location.x == 136 and location.y == 8:
+            if (switch_sprite.image == sprites.dungeon.green_switch_up):
+                info.set_score(info.score()+200)
+                switch_sprite.set_image(sprites.dungeon.green_switch_down)
+                scene.set_tile_map_level(tilemap("""
+                    level one switched
+                """))
+                pause(500)
+                music.play(music.melody_playable(music.big_crash), music.PlaybackMode.UNTIL_DONE)
+                scene.camera_shake(3, 500)
+            else:
+                game.splash("The switch broke")
+    
 scene.on_hit_wall(SpriteKind.player, on_hit_wall)
 
-def create_enemies(level: number):
+# Create enemies
+def create_enemies():
+    global current_level
     enemyList: List[Sprite] = []
-    if level == 1:
+    if current_level == 1:
         for index in range(5):
             enemyList.append(sprites.create(assets.image("""
                 poopy left
-            """), SpriteKind.enemy))
-        for enemySprite in sprites.all_of_kind(SpriteKind.enemy):
+            """), SpriteKind.poopy))
+        for enemySprite in sprites.all_of_kind(SpriteKind.poopy):
             enemySprite.set_position(Math.random_range(20, 300), Math.random_range(10, 220))
 
+# On overlap stairs
 def on_on_overlap_stairs(SpriteKind, otherSprite):
+    global current_level
     if current_level == maxLevel:
         game.over(True)
     else:
         stair_sprite.destroy()
-        current_level + 1
+        current_level = current_level + 1
+        print(current_level)
 sprites.on_overlap(SpriteKind.player, SpriteKind.goal, on_on_overlap_stairs)
 
+# On overlap treasure
 def on_on_overlap_treasure(SpriteKind, otherSprite):
-    info.set_score(100)
-    treasure_sprite.set_image(sprites.dungeon.chest_open)
+    if (treasure_sprite.image == sprites.dungeon.chest_closed):
+        info.set_score(info.score()+100)
+        treasure_sprite.set_image(sprites.dungeon.chest_open)
 sprites.on_overlap(SpriteKind.player, SpriteKind.treasure, on_on_overlap_treasure)
 
 
+# On enemy collision
+def on_on_overlap_enemy_poopy(SpriteKind, otherSprite):
+        info.changeLifeBy(-1)
+        sprites.destroy(otherSprite, effects.ashes, 200)
+        otherSprite.destroy()
+        music.thump.play()
+sprites.on_overlap(SpriteKind.player, SpriteKind.poopy, on_on_overlap_enemy_poopy)
+
 def create_level_one():
-    global treasure_sprite, stair_sprite
+    global treasure_sprite, stair_sprite, switch_sprite
+    #music.play(assets.song.level_one_bso, music.PlaybackMode.LoopingInBackground)
     scene.set_tile_map_level(tilemap("""
         level one
     """))
@@ -47,32 +73,36 @@ def create_level_one():
     treasure_sprite.set_position(25, 140)
     stair_sprite = sprites.create(sprites.dungeon.stair_large, SpriteKind.goal)
     stair_sprite.set_position(232, 200)
-    create_enemies(1)
+    switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.goal)
+    switch_sprite.set_position(136, 8)
+    create_enemies()
 
 treasure_sprite: Sprite = None
 stair_sprite: Sprite = None
-maxLevel = 0
-current_level = 0
-player_sprite = None
-switch_sprite = None
-switch_pulled = False
-
+switch_sprite: Sprite = None
+maxLevel = 4
+current_level = 1
+player_sprite: Sprite = None
 
 def on_update_interval():
-    for enemy in sprites.all_of_kind(SpriteKind.enemy):
+    for poopy in sprites.all_of_kind(SpriteKind.poopy):
         # follow the player
-        if enemy.x < Player.player_sprite.x:
-            enemy.vx = 15
+        if poopy.x < Player.player_sprite.x:
+            poopy.vx = 20
+            animation.run_image_animation(poopy, assets.animation("""poopy animated right"""), 200, True)
+            poopy.set_image(assets.image(""" poopy right """))
         else:
-            enemy.vx = -15
-        if enemy.y < Player.player_sprite.y:
-            enemy.vy = 15
-        else:
-            enemy.vy = -15
-game.on_update_interval(1000, on_update_interval)
+            poopy.vx = -20
+            animation.run_image_animation(poopy, assets.animation("""poopy animated left"""), 200, True)
+            poopy.set_image(assets.image(""" poopy left """))
 
-current_level = 1
-maxLevel = 4
+        if poopy.y < Player.player_sprite.y:
+            poopy.vy = 20
+        else:
+            poopy.vy = -20
+game.on_update_interval(500, on_update_interval)
+
+
 create_level_one()
 
 @namespace
@@ -82,3 +112,8 @@ class Player:
     scene.camera_follow_sprite(Player.player_sprite)
     controller.move_sprite(Player.player_sprite, 100, 100)
 
+def on_life_zero():
+    sprites.destroy(player_sprite, effects.ashes, 200)
+    music.wawawawaa.play()
+    game.game_over(False)
+info.on_life_zero(on_life_zero)
