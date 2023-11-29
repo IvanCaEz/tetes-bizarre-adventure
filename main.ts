@@ -4,6 +4,7 @@ namespace SpriteKind {
     export const treasure = SpriteKind.create()
 }
 
+let switch_pulled = false
 //  level.load(loadedLevel)
 scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location: tiles.Location) {
     if (location.x == 136 && location.y == 8) {
@@ -11,6 +12,8 @@ scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location
         scene.setTileMapLevel(tilemap`
                 level one switched
             `)
+        pause(500)
+        scene.cameraShake(3, 500)
     }
     
 })
@@ -72,5 +75,6 @@ namespace Player {
     info.setLife(3)
     scene.cameraFollowSprite(Player.player_sprite)
     controller.moveSprite(Player.player_sprite, 100, 100)
+    console.log(switch_pulled)
 }
 

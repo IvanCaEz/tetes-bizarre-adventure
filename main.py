@@ -4,6 +4,7 @@ class SpriteKind:
     #switch = SpriteKind.create()
     treasure = SpriteKind.create()
 
+switch_pulled =  False
 # level.load(loadedLevel)
 def on_hit_wall(sprite, location):
     if (location.x == 136 and location.y == 8):
@@ -11,7 +12,10 @@ def on_hit_wall(sprite, location):
         scene.set_tile_map_level(tilemap("""
                 level one switched
             """))
+        pause(500)
+        scene.camera_shake(3, 500)
 scene.on_hit_wall(SpriteKind.player, on_hit_wall)
+
 
 def on_on_overlap_goal(SpriteKind, otherSprite):
     if current_level == maxLevel:
@@ -70,3 +74,4 @@ class Player:
     info.set_life(3)
     scene.camera_follow_sprite(Player.player_sprite)
     controller.move_sprite(Player.player_sprite, 100, 100)
+    print(switch_pulled)
