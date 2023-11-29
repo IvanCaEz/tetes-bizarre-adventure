@@ -1,17 +1,10 @@
-namespace SpriteKind {
-    export const goal = SpriteKind.create()
-    // switch = SpriteKind.create()
-    export const treasure = SpriteKind.create()
-}
-
-let switch_pulled = false
 //  level.load(loadedLevel)
 scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location: tiles.Location) {
     if (location.x == 136 && location.y == 8) {
         info.setScore(200)
         scene.setTileMapLevel(tilemap`
-                level one switched
-            `)
+            level one switched
+        `)
         pause(500)
         scene.cameraShake(3, 500)
     }
@@ -28,44 +21,59 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.goal, function on_on_overlap_goa
 })
 function create_level_one() {
     
-    scene.setTileMapLevel(tilemap`level one`)
+    scene.setTileMapLevel(tilemap`
+        level one
+    `)
     treasure_sprite = sprites.create(sprites.dungeon.chestClosed, SpriteKind.treasure)
     treasure_sprite.setPosition(25, 140)
     stair_sprite = sprites.create(sprites.dungeon.stairLarge, SpriteKind.goal)
     stair_sprite.setPosition(232, 200)
+    create_enemies(1)
 }
 
-// switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.switch)
-// switch_sprite.set_position(136, 8)
-sprites.onOverlap(SpriteKind.Player, SpriteKind.treasure, function on_on_overlap_treasure(SpriteKind: Sprite, otherSprite: Sprite) {
-    info.setScore(100)
-    treasure_sprite.setImage(sprites.dungeon.chestOpen)
-})
-let switch_sprite : Sprite = null
-let stair_sprite : Sprite = null
 let treasure_sprite : Sprite = null
+let stair_sprite : Sprite = null
 let maxLevel = 0
+function create_enemies(level: number) {
+    let enemyList = []
+    if (level == 1) {
+        for (let i = 0; i < 5; i++) {
+            enemyList.push(sprites.create(assets.image`
+                poopy left
+            `, SpriteKind.Enemy))
+        }
+        for (let enemySprite of sprites.allOfKind(SpriteKind.Enemy)) {
+            enemySprite.setPosition(Math.randomRange(20, 300), Math.randomRange(10, 220))
+        }
+    }
+    
+}
+
+let switch_pulled = false
+let switch_sprite = null
 let current_level = 0
 let player_sprite = null
-namespace CustomArt {
-    export const Door = img`
-        . f f f f f f f f f f f f f f .
-                    f b b b c b b b c b b b c b b f
-                    f b b b c a a a a a a a c b b f
-                    f b b b c a 9 9 9 9 9 a c b b f
-                    f c b b c a 9 9 9 9 9 a c b b f
-                    f c b b c a 9 9 9 9 9 a c b b f
-                    f b b b c a a a a a a a c b a f
-                    f b b b c b b b c b b b c a 9 f
-                    f b b b c b b b c b b b c a 9 f
-                    f b b b c b b b c b b b c b a f
-                    f c b b c b b b c b b b c b b f
-                    f c b b c b b b c b b b c b b f
-                    f b b b c b b b c b b b c b b f
-                    f b b b c b b b c b b b c b b f
-                    f b b b c b b b c b b b c b b f
-                    . f f f f f f f f f f f f f f .
-    `
+game.onUpdateInterval(1000, function on_update_interval() {
+    for (let enemy of sprites.allOfKind(SpriteKind.Enemy)) {
+        //  follow the player
+        if (enemy.x < Player.player_sprite.x) {
+            enemy.vx = 15
+        } else {
+            enemy.vx = -15
+        }
+        
+        if (enemy.y < Player.player_sprite.y) {
+            enemy.vy = 15
+        } else {
+            enemy.vy = -15
+        }
+        
+    }
+})
+namespace SpriteKind {
+    export const goal = SpriteKind.create()
+    //  switch = SpriteKind.create()
+    export const treasure = SpriteKind.create()
 }
 
 maxLevel = 3
