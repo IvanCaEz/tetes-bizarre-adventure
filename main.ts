@@ -53,6 +53,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.goal, function on_on_overlap_sta
     } else {
         stair_sprite.destroy()
         current_level = current_level + 1
+        select_levels()
         console.log(current_level)
     }
     
@@ -84,9 +85,24 @@ function create_level_one() {
     stair_sprite.setPosition(232, 200)
     switch_sprite = sprites.create(sprites.dungeon.greenSwitchUp, SpriteKind.goal)
     switch_sprite.setPosition(136, 8)
-    create_enemies()
 }
 
+// create_enemies()
+function create_level_two() {
+    
+    // music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
+    scene.setTileMapLevel(tilemap`
+        level two base
+    `)
+    treasure_sprite.setImage(sprites.dungeon.chestClosed)
+    treasure_sprite.setPosition(25, 140)
+    stair_sprite = sprites.create(sprites.dungeon.stairLarge, SpriteKind.goal)
+    stair_sprite.setPosition(232, 200)
+    switch_sprite = sprites.create(sprites.dungeon.greenSwitchUp, SpriteKind.goal)
+    switch_sprite.setPosition(136, 8)
+}
+
+// create_enemies()
 music.setVolume(40)
 let treasure_sprite : Sprite = null
 let stair_sprite : Sprite = null
@@ -115,7 +131,16 @@ game.onUpdateInterval(500, function on_update_interval() {
         
     }
 })
-create_level_one()
+function select_levels() {
+    
+    if (current_level == 1) {
+        create_level_one()
+    } else if (current_level == 2) {
+        create_level_two()
+    }
+    
+}
+
 namespace Player {
     export const player_sprite = sprites.create(sprites.duck.duck1, SpriteKind.Player)
     info.setLife(3)
@@ -123,6 +148,7 @@ namespace Player {
     controller.moveSprite(Player.player_sprite, 100, 100)
 }
 
+select_levels()
 info.onLifeZero(function on_life_zero() {
     sprites.destroy(player_sprite, effects.ashes, 200)
     music.wawawawaa.play()

@@ -44,6 +44,8 @@ def on_on_overlap_stairs(SpriteKind, otherSprite):
     else:
         stair_sprite.destroy()
         current_level = current_level + 1
+        select_levels()
+
         print(current_level)
 sprites.on_overlap(SpriteKind.player, SpriteKind.goal, on_on_overlap_stairs)
 
@@ -75,7 +77,21 @@ def create_level_one():
     stair_sprite.set_position(232, 200)
     switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.goal)
     switch_sprite.set_position(136, 8)
-    create_enemies()
+    #create_enemies()
+
+def create_level_two():
+    global treasure_sprite, stair_sprite, switch_sprite
+    #music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
+    scene.set_tile_map_level(tilemap("""
+        level two base
+    """))
+    treasure_sprite.set_image(sprites.dungeon.chest_closed)
+    treasure_sprite.set_position(25, 140)
+    stair_sprite = sprites.create(sprites.dungeon.stair_large, SpriteKind.goal)
+    stair_sprite.set_position(232, 200)
+    switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.goal)
+    switch_sprite.set_position(136, 8)
+    #create_enemies()
 
 music.set_volume(40)
 
@@ -104,7 +120,13 @@ def on_update_interval():
             poopy.vy = -20
 game.on_update_interval(500, on_update_interval)
 
-create_level_one()
+
+def select_levels():
+    global current_level
+    if current_level == 1:
+        create_level_one()
+    elif current_level == 2:
+        create_level_two()
 
 @namespace
 class Player:
@@ -112,6 +134,9 @@ class Player:
     info.set_life(3)
     scene.camera_follow_sprite(Player.player_sprite)
     controller.move_sprite(Player.player_sprite, 100, 100)
+
+select_levels()
+
 
 def on_life_zero():
     sprites.destroy(player_sprite, effects.ashes, 200)
