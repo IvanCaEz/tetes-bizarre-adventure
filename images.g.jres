@@ -29,6 +29,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "tete back"
     },
+    "image7": {
+        "data": "hwQQABAAAAAAAPD//w8AAADw////8Q8AAP/x//8R8QDwHxH/HxHxD/D/EREREf8P//8fERER/////x8RERH//x//EfH/EfH/HxER//8fEfEfERH//x8R8R8REfH/EfH/8BERERER/w/wH/8fEfH/DwD///8R//8AAPD//xH/DwAAAPD//w8AAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "ball idle"
+    },
     "anim1": {
         "namespace": "myAnimations",
         "id": "anim1",

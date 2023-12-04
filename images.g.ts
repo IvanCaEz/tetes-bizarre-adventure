@@ -117,6 +117,25 @@ f c e e e e e e e e e e e f . .
 . . . . . f f f f f f . . . . . 
 . . . . . f f . . f f . . . . . 
 `;
+            case "image7":
+            case "ball idle":return img`
+. . . . . f f f f f f . . . . . 
+. . . f f f f 1 1 1 1 f f . . . 
+. . f f f f f f 1 1 1 1 f f . . 
+. f f 1 f f f f 1 1 1 1 1 f f . 
+. f 1 1 1 f f 1 1 1 1 1 f f f . 
+f f f 1 1 1 1 1 1 1 1 1 f f f f 
+f f f f 1 1 1 1 f f 1 1 f f f f 
+f f f f 1 1 1 f f f f 1 1 f f f 
+f f f f 1 1 1 f f f f 1 1 1 1 f 
+f f f 1 1 1 1 f f f f 1 1 1 1 f 
+f 1 1 1 1 1 1 1 f f 1 1 1 f f f 
+. f 1 1 1 1 1 1 1 1 1 1 f f f . 
+. f 1 1 f f f 1 1 1 1 f f f f . 
+. . f f f f f f 1 1 f f f f . . 
+. . . f f f f f 1 1 f f f . . . 
+. . . . . f f f f f f . . . . . 
+`;
         }
         return null;
     })

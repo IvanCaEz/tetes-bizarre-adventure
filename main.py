@@ -8,16 +8,20 @@ class SpriteKind:
     ghost = SpriteKind.create()
     red_card = SpriteKind.create()
     yellow_card = SpriteKind.create()
+    ball = SpriteKind.create()
 
 
 treasure_sprite: Sprite = None
 stair_sprite: Sprite = None
 switch_sprite: Sprite = None
 switch_sprite_two: Sprite = None
+ball_sprite: Sprite = None
 maxLevel = 4
 current_level = 2
-player_direction = 0
+player_direction = 1
 player_sprite: Sprite = None
+ball_found = False
+kick_cooldown = False
     
 @namespace
 class Player:
@@ -60,19 +64,24 @@ def on_down_pressed():
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
 def on_a_pressed():
-    global player_direction
-    if player_direction == 1:
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, -110)
-        music.pewPew.play()
-    elif player_direction == 2:
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, 110)
-        music.pewPew.play()
-    elif player_direction == 3:
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 110, 0)
-        music.pewPew.play()
-    elif player_direction == 4:
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
-        music.pewPew.play()
+    global player_direction, ball_found
+    if ball_found and kick_cooldown == False:
+        if player_direction == 1:
+            projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 0, -110)
+            music.pewPew.play()
+            animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
+        elif player_direction == 2:
+            projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 0, 110)
+            music.pewPew.play()
+            animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
+        elif player_direction == 3:
+            projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 110, 0)
+            music.pewPew.play()
+            animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
+        elif player_direction == 4:
+            projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, -110, 0)
+            music.pewPew.play()
+            animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
     print(player_direction)
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
@@ -162,6 +171,15 @@ def on_on_overlap_treasure(SpriteKind, otherSprite):
         treasure_sprite.set_image(sprites.dungeon.chest_open)
 sprites.on_overlap(SpriteKind.player, SpriteKind.treasure, on_on_overlap_treasure)
 
+# On overlap player with ball (item)
+def on_on_overlap_ball(SpriteKind, otherSprite):
+    global ball_found
+    ball_found = True
+    game.splash("You found your precious ball!")
+    game.splash("Now you can kick it with A")
+    ball_sprite.destroy()
+sprites.on_overlap(SpriteKind.player, SpriteKind.ball, on_on_overlap_ball)
+
 
 # On enemy collision
 def on_on_overlap_enemy_poopy(SpriteKind, otherSprite):
@@ -186,7 +204,7 @@ def create_level_one():
     create_enemies()
 
 def create_level_two():
-    global treasure_sprite, stair_sprite, switch_sprite, switch_sprite_two
+    global treasure_sprite, stair_sprite, switch_sprite, switch_sprite_two, ball_sprite
     #music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
     scene.set_tile_map_level(tilemap("""
         level two base
@@ -200,12 +218,16 @@ def create_level_two():
     switch_sprite.set_position(142, 424)
     switch_sprite_two = sprites.create(sprites.dungeon.purple_switch_up, SpriteKind.switch)
     switch_sprite_two.set_position(50, 8)
+    ball_sprite = sprites.create(assets.image("""ball idle"""), SpriteKind.ball)
+    ball_sprite.set_position(258, 46)
     create_enemies()
 
 music.set_volume(40)
 
 
 def on_update_interval():
+
+
     for poopy in sprites.all_of_kind(SpriteKind.poopy):
         # follow the player
         if poopy.x < Player.player_sprite.x:

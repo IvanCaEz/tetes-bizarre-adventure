@@ -7,16 +7,20 @@ namespace SpriteKind {
     export const ghost = SpriteKind.create()
     export const red_card = SpriteKind.create()
     export const yellow_card = SpriteKind.create()
+    export const ball = SpriteKind.create()
 }
 
 let treasure_sprite : Sprite = null
 let stair_sprite : Sprite = null
 let switch_sprite : Sprite = null
 let switch_sprite_two : Sprite = null
+let ball_sprite : Sprite = null
 let maxLevel = 4
 let current_level = 2
-let player_direction = 0
+let player_direction = 1
 let player_sprite : Sprite = null
+let ball_found = false
+let kick_cooldown = false
 namespace Player {
     export const player_sprite = sprites.create(assets.image`
                         tete right
@@ -55,18 +59,25 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function on_down_pressed(
 controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     let projectileSprite: Sprite;
     
-    if (player_direction == 1) {
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, -110)
-        music.pewPew.play()
-    } else if (player_direction == 2) {
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, 110)
-        music.pewPew.play()
-    } else if (player_direction == 3) {
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 110, 0)
-        music.pewPew.play()
-    } else if (player_direction == 4) {
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
-        music.pewPew.play()
+    if (ball_found && kick_cooldown == false) {
+        if (player_direction == 1) {
+            projectileSprite = sprites.createProjectileFromSprite(assets.image`ball idle`, Player.player_sprite, 0, -110)
+            music.pewPew.play()
+            animation.runImageAnimation(projectileSprite, assets.animation`ballAttack`, 50, true)
+        } else if (player_direction == 2) {
+            projectileSprite = sprites.createProjectileFromSprite(assets.image`ball idle`, Player.player_sprite, 0, 110)
+            music.pewPew.play()
+            animation.runImageAnimation(projectileSprite, assets.animation`ballAttack`, 50, true)
+        } else if (player_direction == 3) {
+            projectileSprite = sprites.createProjectileFromSprite(assets.image`ball idle`, Player.player_sprite, 110, 0)
+            music.pewPew.play()
+            animation.runImageAnimation(projectileSprite, assets.animation`ballAttack`, 50, true)
+        } else if (player_direction == 4) {
+            projectileSprite = sprites.createProjectileFromSprite(assets.image`ball idle`, Player.player_sprite, -110, 0)
+            music.pewPew.play()
+            animation.runImageAnimation(projectileSprite, assets.animation`ballAttack`, 50, true)
+        }
+        
     }
     
     console.log(player_direction)
@@ -176,6 +187,14 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.treasure, function on_on_overlap
     }
     
 })
+//  On overlap player with ball (item)
+sprites.onOverlap(SpriteKind.Player, SpriteKind.ball, function on_on_overlap_ball(SpriteKind: Sprite, otherSprite: Sprite) {
+    
+    ball_found = true
+    game.splash("You found your precious ball!")
+    game.splash("Now you can kick it with A")
+    ball_sprite.destroy()
+})
 //  On enemy collision
 sprites.onOverlap(SpriteKind.Player, SpriteKind.poopy, function on_on_overlap_enemy_poopy(SpriteKind: Sprite, otherSprite: Sprite) {
     info.changeLifeBy(-1)
@@ -213,6 +232,8 @@ function create_level_two() {
     switch_sprite.setPosition(142, 424)
     switch_sprite_two = sprites.create(sprites.dungeon.purpleSwitchUp, SpriteKind.switch_)
     switch_sprite_two.setPosition(50, 8)
+    ball_sprite = sprites.create(assets.image`ball idle`, SpriteKind.ball)
+    ball_sprite.setPosition(258, 46)
     create_enemies()
 }
 
