@@ -23,7 +23,7 @@ def on_hit_wall(sprite, location):
                 scene.camera_shake(3, 500)
             else:
                 game.splash("The switch broke")
-    if current_level == 2:
+    elif current_level == 2:
         if location.x == 136 and location.y == 424:
             print("localizacion correcta")
             if (switch_sprite.image == sprites.dungeon.purple_switch_up):
@@ -33,6 +33,20 @@ def on_hit_wall(sprite, location):
                 scene.set_tile_map_level(tilemap("""
                                     level two bridge
                                 """))
+                pause(500)
+                music.play(music.melody_playable(music.big_crash), music.PlaybackMode.UNTIL_DONE)
+                scene.camera_shake(3, 500)
+            else:
+                game.splash("The switch broke")
+        elif location.x == 40 and location.y == 8:
+            print("localizacion correcta")
+            if (switch_sprite_two.image == sprites.dungeon.purple_switch_up):
+                print("imagen correcta")
+                info.set_score(info.score()+200)
+                switch_sprite_two.set_image(sprites.dungeon.purple_switch_down)
+                scene.set_tile_map_level(tilemap("""
+                                                    level two bridge two
+                                                """))
                 pause(500)
                 music.play(music.melody_playable(music.big_crash), music.PlaybackMode.UNTIL_DONE)
                 scene.camera_shake(3, 500)
@@ -105,7 +119,7 @@ def create_level_one():
     create_enemies()
 
 def create_level_two():
-    global treasure_sprite, stair_sprite, switch_sprite
+    global treasure_sprite, stair_sprite, switch_sprite, switch_sprite_two
     #music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
     scene.set_tile_map_level(tilemap("""
         level two base
@@ -117,6 +131,8 @@ def create_level_two():
     stair_sprite.set_position(25, 492)
     switch_sprite = sprites.create(sprites.dungeon.purple_switch_up, SpriteKind.switch)
     switch_sprite.set_position(142, 424)
+    switch_sprite_two = sprites.create(sprites.dungeon.purple_switch_up, SpriteKind.switch)
+    switch_sprite_two.set_position(50, 8)
     create_enemies()
 
 music.set_volume(40)
@@ -124,6 +140,7 @@ music.set_volume(40)
 treasure_sprite: Sprite = None
 stair_sprite: Sprite = None
 switch_sprite: Sprite = None
+switch_sprite_two: Sprite = None
 maxLevel = 4
 current_level = 2
 player_sprite: Sprite = None

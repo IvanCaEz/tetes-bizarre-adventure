@@ -27,9 +27,7 @@ scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location
             
         }
         
-    }
-    
-    if (current_level == 2) {
+    } else if (current_level == 2) {
         if (location.x == 136 && location.y == 424) {
             console.log("localizacion correcta")
             if (switch_sprite.image == sprites.dungeon.purpleSwitchUp) {
@@ -39,6 +37,22 @@ scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location
                 scene.setTileMapLevel(tilemap`
                                     level two bridge
                                 `)
+                pause(500)
+                music.play(music.melodyPlayable(music.bigCrash), music.PlaybackMode.UntilDone)
+                scene.cameraShake(3, 500)
+            } else {
+                game.splash("The switch broke")
+            }
+            
+        } else if (location.x == 40 && location.y == 8) {
+            console.log("localizacion correcta")
+            if (switch_sprite_two.image == sprites.dungeon.purpleSwitchUp) {
+                console.log("imagen correcta")
+                info.setScore(info.score() + 200)
+                switch_sprite_two.setImage(sprites.dungeon.purpleSwitchDown)
+                scene.setTileMapLevel(tilemap`
+                                                    level two bridge two
+                                                `)
                 pause(500)
                 music.play(music.melodyPlayable(music.bigCrash), music.PlaybackMode.UntilDone)
                 scene.cameraShake(3, 500)
@@ -135,6 +149,8 @@ function create_level_two() {
     stair_sprite.setPosition(25, 492)
     switch_sprite = sprites.create(sprites.dungeon.purpleSwitchUp, SpriteKind.switch_)
     switch_sprite.setPosition(142, 424)
+    switch_sprite_two = sprites.create(sprites.dungeon.purpleSwitchUp, SpriteKind.switch_)
+    switch_sprite_two.setPosition(50, 8)
     create_enemies()
 }
 
@@ -142,6 +158,7 @@ music.setVolume(40)
 let treasure_sprite : Sprite = null
 let stair_sprite : Sprite = null
 let switch_sprite : Sprite = null
+let switch_sprite_two : Sprite = null
 let maxLevel = 4
 let current_level = 2
 let player_sprite : Sprite = null
