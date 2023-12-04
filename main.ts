@@ -9,65 +9,67 @@ namespace SpriteKind {
     export const yellow_card = SpriteKind.create()
 }
 
+let treasure_sprite : Sprite = null
+let stair_sprite : Sprite = null
+let switch_sprite : Sprite = null
+let switch_sprite_two : Sprite = null
+let maxLevel = 4
+let current_level = 2
+let player_direction = 0
+let player_sprite : Sprite = null
+namespace Player {
+    export const player_sprite = sprites.create(assets.image`
+                        tete right
+                    `, SpriteKind.Player)
+    info.setLife(3)
+    scene.cameraFollowSprite(Player.player_sprite)
+    controller.moveSprite(Player.player_sprite, 100, 100)
+}
+
 controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
     
-    animation.runImageAnimation(player_sprite, assets.animation`walkRight`, 200, true)
-    player_sprite.setImage(assets.image`
+    animation.runImageAnimation(Player.player_sprite, assets.animation`walkRight`, 200, true)
+    Player.player_sprite.setImage(assets.image`
                         tete right
                     `)
+    player_direction = 3
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
     
-    animation.runImageAnimation(player_sprite, assets.animation` walkLeft `, 200, true)
-    player_sprite.setImage(assets.image` tete left `)
+    animation.runImageAnimation(Player.player_sprite, assets.animation` walkLeft `, 200, true)
+    Player.player_sprite.setImage(assets.image` tete left `)
+    player_direction = 4
 })
 controller.up.onEvent(ControllerButtonEvent.Pressed, function on_up_pressed() {
     
-    animation.runImageAnimation(player_sprite, assets.animation` backWalk `, 200, true)
-    player_sprite.setImage(assets.image` tete back `)
+    animation.runImageAnimation(Player.player_sprite, assets.animation` backWalk `, 200, true)
+    Player.player_sprite.setImage(assets.image` tete back `)
+    player_direction = 1
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function on_down_pressed() {
     
-    animation.runImageAnimation(player_sprite, assets.animation`frontWalk`, 200, true)
-    player_sprite.setImage(assets.image` tete front `)
+    animation.runImageAnimation(Player.player_sprite, assets.animation`frontWalk`, 200, true)
+    Player.player_sprite.setImage(assets.image` tete front `)
+    player_direction = 2
 })
-controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function on_button_event_a_pressed() {
+controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     let projectileSprite: Sprite;
     
-    if (controller.player1.isPressed(ControllerButton.Up)) {
+    if (player_direction == 1) {
         projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, -110)
         music.pewPew.play()
-        player_direction = 1
-    } else if (controller.player1.isPressed(ControllerButton.Down)) {
+    } else if (player_direction == 2) {
         projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, 110)
         music.pewPew.play()
-        player_direction = 2
-    } else if (controller.player1.isPressed(ControllerButton.Right)) {
+    } else if (player_direction == 3) {
         projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 110, 0)
         music.pewPew.play()
-        player_direction = 3
-    } else if (controller.player1.isPressed(ControllerButton.Left)) {
+    } else if (player_direction == 4) {
         projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
         music.pewPew.play()
-        player_direction = 4
-    } else {
-        if (player_direction == 1) {
-            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, -110)
-            music.pewPew.play()
-        } else if (player_direction == 2) {
-            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, 110)
-            music.pewPew.play()
-        } else if (player_direction == 3) {
-            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 110, 0)
-            music.pewPew.play()
-        } else if (player_direction == 4) {
-            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
-            music.pewPew.play()
-        }
-        
-        console.log(player_direction)
     }
     
+    console.log(player_direction)
 })
 //  On hit wall
 scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location: tiles.Location) {
@@ -215,14 +217,6 @@ function create_level_two() {
 }
 
 music.setVolume(40)
-let treasure_sprite : Sprite = null
-let stair_sprite : Sprite = null
-let switch_sprite : Sprite = null
-let switch_sprite_two : Sprite = null
-let maxLevel = 4
-let current_level = 2
-let player_sprite : Sprite = null
-let player_direction = 1
 game.onUpdateInterval(500, function on_update_interval() {
     for (let poopy of sprites.allOfKind(SpriteKind.poopy)) {
         //  follow the player
@@ -252,15 +246,6 @@ function select_levels() {
         create_level_two()
     }
     
-}
-
-namespace Player {
-    export const player_sprite = sprites.create(assets.image`
-                    tete right
-                `, SpriteKind.Player)
-    info.setLife(3)
-    scene.cameraFollowSprite(Player.player_sprite)
-    controller.moveSprite(Player.player_sprite, 100, 100)
 }
 
 select_levels()
