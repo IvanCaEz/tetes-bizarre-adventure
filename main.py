@@ -194,6 +194,7 @@ def on_button_event_a_pressed():
     else:
         projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
         music.pewPew.play()
+
 controller.player1.on_button_event(ControllerButton.A, ControllerButtonEvent.PRESSED, on_button_event_a_pressed)
 
 def on_life_zero():
