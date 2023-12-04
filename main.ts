@@ -7,7 +7,9 @@ namespace SpriteKind {
 
 //  On hit wall
 scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location: tiles.Location) {
-    console.log(current_level)
+    
+    console.log("X: " + location.x)
+    console.log("Y: " + location.y)
     if (current_level == 1) {
         if (location.x == 136 && location.y == 8) {
             if (switch_sprite.image == sprites.dungeon.greenSwitchUp) {
@@ -27,7 +29,39 @@ scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location
         
     }
     
+    if (current_level == 2) {
+        if (location.x == 136 && location.y == 424) {
+            console.log("localizacion correcta")
+            if (switch_sprite.image == sprites.dungeon.purpleSwitchUp) {
+                console.log("imagen correcta")
+                info.setScore(info.score() + 200)
+                switch_sprite.setImage(sprites.dungeon.purpleSwitchDown)
+                scene.setTileMapLevel(tilemap`
+                                    level two bridge
+                                `)
+                pause(500)
+                music.play(music.melodyPlayable(music.bigCrash), music.PlaybackMode.UntilDone)
+                scene.cameraShake(3, 500)
+            } else {
+                game.splash("The switch broke")
+            }
+            
+        }
+        
+    } else {
+        
+    }
+    
 })
+function reset_level() {
+    
+    if (current_level == 2) {
+        switch_sprite.setImage(sprites.dungeon.greenSwitchUp)
+        treasure_sprite.setImage(sprites.dungeon.chestClosed)
+    }
+    
+}
+
 //  Create enemies
 function create_enemies() {
     
@@ -53,8 +87,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.goal, function on_on_overlap_sta
     } else {
         stair_sprite.destroy()
         current_level = current_level + 1
+        // reset_level()
         select_levels()
-        console.log(current_level)
     }
     
 })
@@ -85,30 +119,31 @@ function create_level_one() {
     stair_sprite.setPosition(232, 200)
     switch_sprite = sprites.create(sprites.dungeon.greenSwitchUp, SpriteKind.goal)
     switch_sprite.setPosition(136, 8)
+    create_enemies()
 }
 
-// create_enemies()
 function create_level_two() {
     
     // music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
     scene.setTileMapLevel(tilemap`
         level two base
     `)
-    treasure_sprite.setImage(sprites.dungeon.chestClosed)
-    treasure_sprite.setPosition(25, 140)
+    Player.player_sprite.setPosition(228, 23)
+    treasure_sprite = sprites.create(sprites.dungeon.chestClosed, SpriteKind.treasure)
+    treasure_sprite.setPosition(484, 58)
     stair_sprite = sprites.create(sprites.dungeon.stairLarge, SpriteKind.goal)
-    stair_sprite.setPosition(232, 200)
-    switch_sprite = sprites.create(sprites.dungeon.greenSwitchUp, SpriteKind.goal)
-    switch_sprite.setPosition(136, 8)
+    stair_sprite.setPosition(25, 492)
+    switch_sprite = sprites.create(sprites.dungeon.purpleSwitchUp, SpriteKind.switch_)
+    switch_sprite.setPosition(142, 424)
+    create_enemies()
 }
 
-// create_enemies()
 music.setVolume(40)
 let treasure_sprite : Sprite = null
 let stair_sprite : Sprite = null
 let switch_sprite : Sprite = null
 let maxLevel = 4
-let current_level = 1
+let current_level = 2
 let player_sprite : Sprite = null
 game.onUpdateInterval(500, function on_update_interval() {
     for (let poopy of sprites.allOfKind(SpriteKind.poopy)) {

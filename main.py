@@ -7,7 +7,9 @@ class SpriteKind:
 
 # On hit wall
 def on_hit_wall(sprite, location):
-    print(current_level)
+    global current_level
+    print("X: "+location.x)
+    print("Y: "+location.y)
     if current_level == 1:
         if location.x == 136 and location.y == 8:
             if (switch_sprite.image == sprites.dungeon.green_switch_up):
@@ -21,8 +23,32 @@ def on_hit_wall(sprite, location):
                 scene.camera_shake(3, 500)
             else:
                 game.splash("The switch broke")
-    
+    if current_level == 2:
+        if location.x == 136 and location.y == 424:
+            print("localizacion correcta")
+            if (switch_sprite.image == sprites.dungeon.purple_switch_up):
+                print("imagen correcta")
+                info.set_score(info.score()+200)
+                switch_sprite.set_image(sprites.dungeon.purple_switch_down)
+                scene.set_tile_map_level(tilemap("""
+                                    level two bridge
+                                """))
+                pause(500)
+                music.play(music.melody_playable(music.big_crash), music.PlaybackMode.UNTIL_DONE)
+                scene.camera_shake(3, 500)
+            else:
+                game.splash("The switch broke")
+    else:
+        pass
 scene.on_hit_wall(SpriteKind.player, on_hit_wall)
+
+def reset_level():
+    global current_level
+    if current_level == 2:
+        switch_sprite.set_image(sprites.dungeon.green_switch_up)
+        treasure_sprite.set_image(sprites.dungeon.chest_closed)
+    
+
 
 # Create enemies
 def create_enemies():
@@ -44,9 +70,8 @@ def on_on_overlap_stairs(SpriteKind, otherSprite):
     else:
         stair_sprite.destroy()
         current_level = current_level + 1
+        #reset_level()
         select_levels()
-
-        print(current_level)
 sprites.on_overlap(SpriteKind.player, SpriteKind.goal, on_on_overlap_stairs)
 
 # On overlap treasure
@@ -77,7 +102,7 @@ def create_level_one():
     stair_sprite.set_position(232, 200)
     switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.goal)
     switch_sprite.set_position(136, 8)
-    #create_enemies()
+    create_enemies()
 
 def create_level_two():
     global treasure_sprite, stair_sprite, switch_sprite
@@ -85,13 +110,14 @@ def create_level_two():
     scene.set_tile_map_level(tilemap("""
         level two base
     """))
-    treasure_sprite.set_image(sprites.dungeon.chest_closed)
-    treasure_sprite.set_position(25, 140)
+    Player.player_sprite.set_position(228,23)
+    treasure_sprite = sprites.create(sprites.dungeon.chest_closed, SpriteKind.treasure)
+    treasure_sprite.set_position(484, 58)
     stair_sprite = sprites.create(sprites.dungeon.stair_large, SpriteKind.goal)
-    stair_sprite.set_position(232, 200)
-    switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.goal)
-    switch_sprite.set_position(136, 8)
-    #create_enemies()
+    stair_sprite.set_position(25, 492)
+    switch_sprite = sprites.create(sprites.dungeon.purple_switch_up, SpriteKind.switch)
+    switch_sprite.set_position(142, 424)
+    create_enemies()
 
 music.set_volume(40)
 
@@ -99,7 +125,7 @@ treasure_sprite: Sprite = None
 stair_sprite: Sprite = None
 switch_sprite: Sprite = None
 maxLevel = 4
-current_level = 1
+current_level = 2
 player_sprite: Sprite = None
 
 def on_update_interval():
