@@ -4,6 +4,8 @@ class SpriteKind:
     treasure = SpriteKind.create()
     switch = SpriteKind.create()
     poopy = SpriteKind.create()
+    bat = SpriteKind.create()
+    ghost = SpriteKind.create()
 
 # On hit wall
 def on_hit_wall(sprite, location):
@@ -25,9 +27,7 @@ def on_hit_wall(sprite, location):
                 game.splash("The switch broke")
     elif current_level == 2:
         if location.x == 136 and location.y == 424:
-            print("localizacion correcta")
             if (switch_sprite.image == sprites.dungeon.purple_switch_up):
-                print("imagen correcta")
                 info.set_score(info.score()+200)
                 switch_sprite.set_image(sprites.dungeon.purple_switch_down)
                 scene.set_tile_map_level(tilemap("""
@@ -39,9 +39,7 @@ def on_hit_wall(sprite, location):
             else:
                 game.splash("The switch broke")
         elif location.x == 40 and location.y == 8:
-            print("localizacion correcta")
             if (switch_sprite_two.image == sprites.dungeon.purple_switch_up):
-                print("imagen correcta")
                 info.set_score(info.score()+200)
                 switch_sprite_two.set_image(sprites.dungeon.purple_switch_down)
                 scene.set_tile_map_level(tilemap("""
@@ -177,9 +175,26 @@ class Player:
     info.set_life(3)
     scene.camera_follow_sprite(Player.player_sprite)
     controller.move_sprite(Player.player_sprite, 100, 100)
-
+    
 select_levels()
 
+def on_button_event_a_pressed():
+    if controller.player1.is_pressed(ControllerButton.UP):
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, -110)
+        music.pewPew.play()
+    elif controller.player1.is_pressed(ControllerButton.DOWN):
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, 110)
+        music.pewPew.play()
+    elif controller.player1.is_pressed(ControllerButton.RIGHT):
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 110, 0)
+        music.pewPew.play()
+    elif controller.player1.is_pressed(ControllerButton.LEFT):
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
+        music.pewPew.play()
+    else:
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
+        music.pewPew.play()
+controller.player1.on_button_event(ControllerButton.A, ControllerButtonEvent.PRESSED, on_button_event_a_pressed)
 
 def on_life_zero():
     sprites.destroy(player_sprite, effects.ashes, 200)
