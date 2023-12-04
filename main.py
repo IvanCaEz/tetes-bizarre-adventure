@@ -6,6 +6,76 @@ class SpriteKind:
     poopy = SpriteKind.create()
     bat = SpriteKind.create()
     ghost = SpriteKind.create()
+    red_card = SpriteKind.create()
+    yellow_card = SpriteKind.create()
+
+
+
+def on_right_pressed():
+    global player_sprite
+    animation.run_image_animation(player_sprite, assets.animation("""walkRight"""), 200, True)
+    player_sprite.set_image(assets.image("""
+                        tete right
+                    """))
+controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
+
+def on_left_pressed():
+    global player_sprite
+
+    animation.run_image_animation(player_sprite, assets.animation(""" walkLeft """), 200, True)
+    player_sprite.set_image(assets.image(""" tete left """))
+controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
+
+def on_up_pressed():
+    global player_sprite
+
+    animation.run_image_animation(player_sprite, assets.animation(""" backWalk """), 200, True)
+    player_sprite.set_image(assets.image(""" tete back """))
+controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
+
+def on_down_pressed():
+    global player_sprite
+    animation.run_image_animation(player_sprite, assets.animation("""frontWalk"""), 200, True)
+    player_sprite.set_image(assets.image(""" tete front """))
+controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
+
+
+def on_button_event_a_pressed():
+    global player_direction
+    if controller.player1.is_pressed(ControllerButton.UP):
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, -110)
+        music.pewPew.play()
+        player_direction = 1
+    elif controller.player1.is_pressed(ControllerButton.DOWN):
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, 110)
+        music.pewPew.play()
+        player_direction = 2
+
+    elif controller.player1.is_pressed(ControllerButton.RIGHT):
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 110, 0)
+        music.pewPew.play()
+        player_direction = 3
+    elif controller.player1.is_pressed(ControllerButton.LEFT):
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
+        music.pewPew.play()
+        player_direction = 4
+    else:
+        if player_direction == 1:
+            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, -110)
+            music.pewPew.play()
+        elif player_direction == 2:
+            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, 110)
+            music.pewPew.play()
+        elif player_direction == 3:
+            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 110, 0)
+            music.pewPew.play()
+        elif player_direction == 4:
+            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
+            music.pewPew.play()
+        print(player_direction)
+        
+controller.player1.on_button_event(ControllerButton.A, ControllerButtonEvent.PRESSED, on_button_event_a_pressed)
+
 
 # On hit wall
 def on_hit_wall(sprite, location):
@@ -60,8 +130,6 @@ def reset_level():
         switch_sprite.set_image(sprites.dungeon.green_switch_up)
         treasure_sprite.set_image(sprites.dungeon.chest_closed)
     
-
-
 # Create enemies
 def create_enemies():
     global current_level
@@ -142,6 +210,7 @@ switch_sprite_two: Sprite = None
 maxLevel = 4
 current_level = 2
 player_sprite: Sprite = None
+player_direction = 1
 
 def on_update_interval():
     for poopy in sprites.all_of_kind(SpriteKind.poopy):
@@ -171,31 +240,15 @@ def select_levels():
 
 @namespace
 class Player:
-    player_sprite = sprites.create(sprites.duck.duck1, SpriteKind.player)
+    player_sprite = sprites.create(assets.image("""
+                    tete right
+                """), SpriteKind.player)
     info.set_life(3)
     scene.camera_follow_sprite(Player.player_sprite)
     controller.move_sprite(Player.player_sprite, 100, 100)
-    
+
+
 select_levels()
-
-def on_button_event_a_pressed():
-    if controller.player1.is_pressed(ControllerButton.UP):
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, -110)
-        music.pewPew.play()
-    elif controller.player1.is_pressed(ControllerButton.DOWN):
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, 110)
-        music.pewPew.play()
-    elif controller.player1.is_pressed(ControllerButton.RIGHT):
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 110, 0)
-        music.pewPew.play()
-    elif controller.player1.is_pressed(ControllerButton.LEFT):
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
-        music.pewPew.play()
-    else:
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
-        music.pewPew.play()
-
-controller.player1.on_button_event(ControllerButton.A, ControllerButtonEvent.PRESSED, on_button_event_a_pressed)
 
 def on_life_zero():
     sprites.destroy(player_sprite, effects.ashes, 200)

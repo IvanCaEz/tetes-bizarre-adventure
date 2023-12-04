@@ -5,8 +5,70 @@ namespace SpriteKind {
     export const poopy = SpriteKind.create()
     export const bat = SpriteKind.create()
     export const ghost = SpriteKind.create()
+    export const red_card = SpriteKind.create()
+    export const yellow_card = SpriteKind.create()
 }
 
+controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
+    
+    animation.runImageAnimation(player_sprite, assets.animation`walkRight`, 200, true)
+    player_sprite.setImage(assets.image`
+                        tete right
+                    `)
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
+    
+    animation.runImageAnimation(player_sprite, assets.animation` walkLeft `, 200, true)
+    player_sprite.setImage(assets.image` tete left `)
+})
+controller.up.onEvent(ControllerButtonEvent.Pressed, function on_up_pressed() {
+    
+    animation.runImageAnimation(player_sprite, assets.animation` backWalk `, 200, true)
+    player_sprite.setImage(assets.image` tete back `)
+})
+controller.down.onEvent(ControllerButtonEvent.Pressed, function on_down_pressed() {
+    
+    animation.runImageAnimation(player_sprite, assets.animation`frontWalk`, 200, true)
+    player_sprite.setImage(assets.image` tete front `)
+})
+controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function on_button_event_a_pressed() {
+    let projectileSprite: Sprite;
+    
+    if (controller.player1.isPressed(ControllerButton.Up)) {
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, -110)
+        music.pewPew.play()
+        player_direction = 1
+    } else if (controller.player1.isPressed(ControllerButton.Down)) {
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, 110)
+        music.pewPew.play()
+        player_direction = 2
+    } else if (controller.player1.isPressed(ControllerButton.Right)) {
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 110, 0)
+        music.pewPew.play()
+        player_direction = 3
+    } else if (controller.player1.isPressed(ControllerButton.Left)) {
+        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
+        music.pewPew.play()
+        player_direction = 4
+    } else {
+        if (player_direction == 1) {
+            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, -110)
+            music.pewPew.play()
+        } else if (player_direction == 2) {
+            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, 110)
+            music.pewPew.play()
+        } else if (player_direction == 3) {
+            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 110, 0)
+            music.pewPew.play()
+        } else if (player_direction == 4) {
+            projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
+            music.pewPew.play()
+        }
+        
+        console.log(player_direction)
+    }
+    
+})
 //  On hit wall
 scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location: tiles.Location) {
     
@@ -160,6 +222,7 @@ let switch_sprite_two : Sprite = null
 let maxLevel = 4
 let current_level = 2
 let player_sprite : Sprite = null
+let player_direction = 1
 game.onUpdateInterval(500, function on_update_interval() {
     for (let poopy of sprites.allOfKind(SpriteKind.poopy)) {
         //  follow the player
@@ -192,33 +255,15 @@ function select_levels() {
 }
 
 namespace Player {
-    export const player_sprite = sprites.create(sprites.duck.duck1, SpriteKind.Player)
+    export const player_sprite = sprites.create(assets.image`
+                    tete right
+                `, SpriteKind.Player)
     info.setLife(3)
     scene.cameraFollowSprite(Player.player_sprite)
     controller.moveSprite(Player.player_sprite, 100, 100)
 }
 
 select_levels()
-controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function on_button_event_a_pressed() {
-    let projectileSprite: Sprite;
-    if (controller.player1.isPressed(ControllerButton.Up)) {
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, -110)
-        music.pewPew.play()
-    } else if (controller.player1.isPressed(ControllerButton.Down)) {
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 0, 110)
-        music.pewPew.play()
-    } else if (controller.player1.isPressed(ControllerButton.Right)) {
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, 110, 0)
-        music.pewPew.play()
-    } else if (controller.player1.isPressed(ControllerButton.Left)) {
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
-        music.pewPew.play()
-    } else {
-        projectileSprite = sprites.createProjectileFromSprite(sprites.projectile.bubble1, Player.player_sprite, -110, 0)
-        music.pewPew.play()
-    }
-    
-})
 info.onLifeZero(function on_life_zero() {
     sprites.destroy(player_sprite, effects.ashes, 200)
     music.wawawawaa.play()

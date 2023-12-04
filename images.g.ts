@@ -3,7 +3,120 @@ namespace myImages {
 
     helpers._registerFactory("image", function(name: string) {
         switch(helpers.stringTrim(name)) {
-
+            case "image1":
+            case "poopy right":return img`
+. . . . . . . . . . . . . . . . 
+. . . . . f f f . . . f f f . . 
+. . . . f b 1 1 f . f b 1 1 f . 
+. . . . f b 1 f f f f b 1 f f . 
+. . . . f b 1 1 f e f b 1 1 f . 
+. . . . . f f f e e e f f f . . 
+. . . . f e e e e e e e f . . . 
+. . . f c e e e f f f e e f . . 
+. . . f c e e f 1 e 1 f e f . . 
+. . . f c e e e e e e e e e f . 
+. . f c e e e e e e e e e e f . 
+. f c e e e e e e e e e e e f . 
+f c e e e e e e e e e e e f . . 
+. f c e e e e e e e e e e f . . 
+. . f f e e e e e e e e f . . . 
+. . . f f f f f f f f f . . . . 
+`;
+            case "image2":
+            case "poopy left":return img`
+. . . . . . . . . . . . . . . . 
+. . f f f . . . f f f . . . . . 
+. f 1 1 b f . f 1 1 b f . . . . 
+. f f 1 b f f f f 1 b f . . . . 
+. f 1 1 b f e f 1 1 b f . . . . 
+. . f f f e e e f f f . . . . . 
+. . . f e e e e e e e f . . . . 
+. . f e e f f f e e e c f . . . 
+. . f e f 1 e 1 f e e c f . . . 
+. f e e e e e e e e e c f . . . 
+. f e e e e e e e e e e c f . . 
+. f e e e e e e e e e e e c f . 
+. . f e e e e e e e e e e e c f 
+. . f e e e e e e e e e e c f . 
+. . . f e e e e e e e e f f . . 
+. . . . f f f f f f f f f . . . 
+`;
+            case "image3":
+            case "tete left":return img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . f f f f f f f . . . . . 
+. . . f d d d d d d c f . . . . 
+. . f d d d d d d d d c f . . . 
+. . f d d d d d d d d c f . . . 
+. . f d d f 1 d d d d c f . . . 
+. . f d d f 1 d d d d c f . . . 
+. . f d d d d d d d d c f . . . 
+. . f f f f d d d d c f f . . . 
+. . . f d d d d 7 7 f f . . . . 
+. . . f 7 1 7 b d d b . . . . . 
+. . . f 7 1 7 b d d b . . . . . 
+. . . f 6 6 8 f b b f . . . . . 
+. . . . f f f f f f . . . . . . 
+. . . . . . f f f . . . . . . . 
+`;
+            case "image4":
+            case "tete right":return img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . f f f f f f f . . . . 
+. . . . f c d d d d d d f . . . 
+. . . f c d d d d d d d d f . . 
+. . . f c d d d d d d d d f . . 
+. . . f c d d d d 1 f d d f . . 
+. . . f c d d d d 1 f d d f . . 
+. . . f c d d d d d d d d f . . 
+. . . f f c d d d d f f f f . . 
+. . . . f f 7 7 d d d d f . . . 
+. . . . . b d d b 7 1 7 f . . . 
+. . . . . b d d b 7 1 7 f . . . 
+. . . . . f b b f 8 6 6 f . . . 
+. . . . . . f f f f f f . . . . 
+. . . . . . . f f f . . . . . . 
+`;
+            case "image5":
+            case "tete front":return img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . f f f f f f . . . . . 
+. . . . f d d d d d c f . . . . 
+. . . f d d d d d d b c f . . . 
+. . f d d d d d d d d b c f . . 
+. . f d d 1 f d d f 1 b c f . . 
+. . f d d 1 f d d f 1 b c f . . 
+. . f d d d d d d d d b c f . . 
+. . f d d d d f f d d b c f . . 
+. . . f d d d d d d b c f . . . 
+. . 7 7 f 7 1 7 1 7 1 f 7 7 . . 
+. . b d f 7 1 7 1 7 1 f d b . . 
+. . d b f 6 6 6 6 6 6 f b d . . 
+. . . . . f f f f f f . . . . . 
+. . . . . f f . . f f . . . . . 
+`;
+            case "image6":
+            case "tete back":return img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . f f f f f f . . . . . 
+. . . . f d d d d b c f . . . . 
+. . . f d d d d d d b c f . . . 
+. . f d d d d d d d d b c f . . 
+. . f d d d d d d d d b c f . . 
+. . f d d d d d d d d b c f . . 
+. . f d d d d d d d d b c f . . 
+. . f d d d d d d d d b c f . . 
+. . . f d d d d d d b c f . . . 
+. . 7 7 f 1 7 1 7 1 7 f 7 7 . . 
+. . b d f 1 7 1 7 1 7 f d b . . 
+. . c b f 6 6 6 6 6 6 f b c . . 
+. . . . . f f f f f f . . . . . 
+. . . . . f f . . f f . . . . . 
+`;
         }
         return null;
     })
