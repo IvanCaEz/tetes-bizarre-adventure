@@ -6,12 +6,14 @@ namespace SpriteKind {
     export const yellow_card = SpriteKind.create()
     export const red_card = SpriteKind.create()
     export const ball = SpriteKind.create()
+    export const heart = SpriteKind.create()
 }
 
 let treasure_sprite : Sprite = null
 let stair_sprite : Sprite = null
 let switch_sprite : Sprite = null
 let switch_sprite_two : Sprite = null
+let heart_sprite : Sprite = null
 let ball_sprite : Sprite = null
 let maxLevel = 4
 let current_level = 3
@@ -53,12 +55,29 @@ function poopy_behavior() {
 }
 
 function generate_poopies(poopies_number: number) {
-    
+    let poopy: Sprite;
     for (let index = 0; index < poopies_number; index++) {
-        enemy_list.push(sprites.create(assets.image`poopy left `, SpriteKind.poopy))
+        poopy = sprites.create(assets.image`poopy left `, SpriteKind.poopy)
+        poopy.setPosition(Math.randomRange(32, 240), Math.randomRange(16, 220))
     }
-    for (let enemySprite of enemy_list) {
-        enemySprite.setPosition(Math.randomRange(20, 300), Math.randomRange(10, 220))
+}
+
+function generate_red_cards(red_cards_number: number) {
+    let red_card: Sprite;
+    for (let index = 0; index < red_cards_number; index++) {
+        red_card = sprites.create(assets.image`redCard base `, SpriteKind.red_card)
+        red_card.setPosition(Math.randomRange(32, 240), Math.randomRange(16, 220))
+        red_card_animation(red_card)
+    }
+}
+
+function generate_yellow_cards(yellow_cards_number: number) {
+    let yellow_card: Sprite;
+    for (let index = 0; index < yellow_cards_number; index++) {
+        yellow_card = sprites.create(assets.image`yellowCard base `, SpriteKind.red_card)
+        yellow_card.setPosition(Math.randomRange(32, 240), Math.randomRange(10, 220))
+        yellow_card_animation(yellow_card)
+        yellow_card.follow(Player.player_sprite, 60, 60)
     }
 }
 
@@ -67,6 +86,7 @@ game.onUpdateInterval(500, function on_update_interval() {
     let red_card_two: Sprite;
     let yellow_card_one: Sprite;
     let yellow_card_two: Sprite;
+    let spawn_enemy: number;
     
     if (current_level == 1) {
         poopy_behavior()
@@ -102,7 +122,20 @@ game.onUpdateInterval(500, function on_update_interval() {
         
         console.log(Player.player_sprite)
     } else if (current_level == 3) {
+        spawn_enemy = Math.randomRange(0, 100)
+        if (spawn_enemy < 10) {
+            generate_red_cards(1)
+        } else if (spawn_enemy < 20) {
+            generate_yellow_cards(1)
+        } else if (spawn_enemy < 35) {
+            generate_poopies(1)
+        }
+        
         poopy_behavior()
+        if (level_three_enemies_defeated == 15) {
+            game.gameOver(true)
+        }
+        
     }
     
 })
@@ -156,10 +189,15 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
         
     }
     
-    console.log(player_direction)
 })
 //  Overlap enemy on hit projectile
 function on_overlap_projectile_with_enemy(sprite: Sprite, otherSprite: Sprite) {
+    
+    if (current_level == 3) {
+        level_three_enemies_defeated = level_three_enemies_defeated + 1
+    }
+    
+    drop_hearts(otherSprite)
     sprites.destroy(otherSprite, effects.spray, 200)
     sprites.destroy(sprite, effects.coolRadial, 200)
     info.setScore(info.score() + 50)
@@ -168,6 +206,13 @@ function on_overlap_projectile_with_enemy(sprite: Sprite, otherSprite: Sprite) {
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.yellow_card, on_overlap_projectile_with_enemy)
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.red_card, on_overlap_projectile_with_enemy)
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.poopy, on_overlap_projectile_with_enemy)
+//  On overlap with lava tiles (no mercy) 
+function on_overlap_tile(sprite: Sprite, location: tiles.Location) {
+    info.setLife(0)
+}
+
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.hazardLava0, on_overlap_tile)
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.hazardLava1, on_overlap_tile)
 //  On hit wall
 scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location: tiles.Location) {
     
@@ -250,9 +295,6 @@ function create_enemies() {
         red_card_two.setPosition(300, 440)
         yellow_card_one.setPosition(216, 170)
         yellow_card_two.setPosition(400, 56)
-    } else if (current_level == 3) {
-        enemy_list = []
-        generate_poopies(4)
     }
     
 }
@@ -276,6 +318,21 @@ function reset_level() {
     
 }
 
+//  15% chance for an enemy to drop a heart
+function drop_hearts(enemy_sprite: Sprite) {
+    let heart_sprite_generated: Sprite;
+    if (Math.randomRange(0, 100) <= 15) {
+        heart_sprite_generated = sprites.create(assets.image`heart`, SpriteKind.heart)
+        heart_sprite_generated.setPosition(enemy_sprite.x, enemy_sprite.y)
+    }
+    
+}
+
+//  On overlap hearts
+sprites.onOverlap(SpriteKind.Player, SpriteKind.heart, function on_on_overlap_hearts(SpriteKind: Sprite, otherSprite: Sprite) {
+    info.setLife(info.life() + 1)
+    sprites.destroy(otherSprite, effects.hearts, 200)
+})
 //  On overlap stairs
 sprites.onOverlap(SpriteKind.Player, SpriteKind.goal, function on_on_overlap_stairs(SpriteKind: Sprite, otherSprite: Sprite) {
     
@@ -307,7 +364,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.ball, function on_on_overlap_bal
 })
 //  On enemy collision
 function on_on_overlap_enemy(SpriteKind: Sprite, otherSprite: Sprite) {
-    info.changeLifeBy(-1)
+    // info.changeLifeBy(-1)
     sprites.destroy(otherSprite, effects.ashes, 200)
     music.thump.play()
 }
@@ -352,10 +409,13 @@ function create_level_two() {
 
 function create_level_three() {
     
+    ball_found = true
     // music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
     scene.setTileMapLevel(tilemap`
         level three no exit
     `)
+    let heart_sprite = sprites.create(assets.image`heart`, SpriteKind.heart)
+    heart_sprite.setPosition(150, 50)
     Player.player_sprite.setPosition(200, 50)
     create_enemies()
 }
