@@ -241,8 +241,7 @@ function create_level_two() {
     scene.setTileMapLevel(tilemap`
         level two base
     `)
-    // Player.player_sprite.set_position(228,23)
-    Player.player_sprite.setPosition(25, 260)
+    Player.player_sprite.setPosition(228, 23)
     treasure_sprite = sprites.create(sprites.dungeon.chestClosed, SpriteKind.treasure)
     treasure_sprite.setPosition(484, 58)
     stair_sprite = sprites.create(sprites.dungeon.stairLarge, SpriteKind.goal)
@@ -259,6 +258,9 @@ function create_level_two() {
 music.setVolume(40)
 game.onUpdateInterval(500, function on_update_interval() {
     let red_card_one: Sprite;
+    let red_card_two: Sprite;
+    let yellow_card_one: Sprite;
+    let yellow_card_two: Sprite;
     
     if (current_level == 1) {
         for (let poopy of sprites.allOfKind(SpriteKind.poopy)) {
@@ -283,12 +285,31 @@ game.onUpdateInterval(500, function on_update_interval() {
     }
     
     if (current_level == 2) {
-        if (Player.player_sprite.x >= 8 && Player.player_sprite.x <= 40 && Player.player_sprite.y >= 232 && Player.player_sprite.y <= 248) {
-            console.log("YEP")
-            red_card_one = enemy_list[0]
+        red_card_one = enemy_list[0]
+        red_card_two = enemy_list[1]
+        yellow_card_one = enemy_list[2]
+        yellow_card_two = enemy_list[3]
+        //  The red card one activates when the player passes that location
+        if (Player.player_sprite.x >= 8 && Player.player_sprite.x <= 40 && Player.player_sprite.y <= 232) {
             red_card_animation(red_card_one)
         }
         
+        yellow_card_one.vx = -60
+        yellow_card_two.vy = -60
+    }
+    
+})
+scene.onHitWall(SpriteKind.yellow_card, function on_hit_wall_yellow_cards(sprite: Sprite, location: tiles.Location) {
+    if (location.x > 200) {
+        sprite.vx = 60
+        console.log("der")
+    } else if (location.x < 300) {
+        console.log("izq")
+        sprite.vx = -60
+    } else if (location.y > 8) {
+        sprite.vy = 60
+    } else if (location.y < 72) {
+        sprite.vy = -60
     }
     
 })
@@ -300,6 +321,16 @@ function red_card_animation(red_card_sprite: Sprite) {
     }
     
     red_card_sprite.follow(Player.player_sprite, 80, 70)
+}
+
+function yellow_card_animation(yellow_card_sprite: Sprite) {
+    if (Player.player_sprite.y > yellow_card_sprite.y) {
+        animation.runImageAnimation(yellow_card_sprite, assets.animation`yellowCardFront`, 200, true)
+    } else {
+        animation.runImageAnimation(yellow_card_sprite, assets.animation`yellowCardBack`, 200, true)
+    }
+    
+    yellow_card_sprite.follow(Player.player_sprite, 60, 70)
 }
 
 function select_levels() {

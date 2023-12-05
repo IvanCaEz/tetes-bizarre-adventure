@@ -168,7 +168,6 @@ def create_enemies():
         yellow_card_two.set_position(400,55)
 
 
-
 # On overlap stairs
 def on_on_overlap_stairs(SpriteKind, otherSprite):
     global current_level
@@ -226,8 +225,7 @@ def create_level_two():
     scene.set_tile_map_level(tilemap("""
         level two base
     """))
-    #Player.player_sprite.set_position(228,23)
-    Player.player_sprite.set_position(25,260)
+    Player.player_sprite.set_position(228,23)
 
     treasure_sprite = sprites.create(sprites.dungeon.chest_closed, SpriteKind.treasure)
     treasure_sprite.set_position(484, 58)
@@ -263,13 +261,31 @@ def on_update_interval():
             else:
                 poopy.vy = -20
     if current_level == 2:
-        if Player.player_sprite.x >= 8 and Player.player_sprite.x <= 40 and Player.player_sprite.y >= 232 and Player.player_sprite.y <= 248:
-            print("YEP")
-            red_card_one = enemy_list[0]
+        red_card_one = enemy_list[0]
+        red_card_two = enemy_list[1]
+        yellow_card_one = enemy_list[2]
+        yellow_card_two = enemy_list[3]
+        # The red card one activates when the player passes that location
+        if Player.player_sprite.x >= 8 and Player.player_sprite.x <= 40 and Player.player_sprite.y <= 232:
             red_card_animation(red_card_one)
-            
+        yellow_card_one.vx = -60
+        yellow_card_two.vy = -60
 
 game.on_update_interval(500, on_update_interval)
+
+def on_hit_wall_yellow_cards(sprite, location):
+    if location.x > 200:
+        sprite.vx = 60
+        print("der")
+    elif location.x < 300:
+        print("izq")
+        sprite.vx = -60       
+    elif location.y > 8:
+        sprite.vy = 60
+    elif location.y < 72:
+        sprite.vy = -60
+
+scene.on_hit_wall(SpriteKind.yellow_card, on_hit_wall_yellow_cards)
 
 def red_card_animation(red_card_sprite: Sprite):
     if Player.player_sprite.y > red_card_sprite.y:
@@ -278,6 +294,12 @@ def red_card_animation(red_card_sprite: Sprite):
         animation.run_image_animation(red_card_sprite, assets.animation("""redCardBack"""), 200, True)
     red_card_sprite.follow(Player.player_sprite, 80, 70)
 
+def yellow_card_animation(yellow_card_sprite: Sprite):
+    if Player.player_sprite.y > yellow_card_sprite.y:
+        animation.run_image_animation(yellow_card_sprite, assets.animation("""yellowCardFront"""), 200, True)
+    else:
+        animation.run_image_animation(yellow_card_sprite, assets.animation("""yellowCardBack"""), 200, True)
+    yellow_card_sprite.follow(Player.player_sprite, 60, 70)
 
 
 def select_levels():
