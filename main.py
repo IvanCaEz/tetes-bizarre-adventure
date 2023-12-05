@@ -76,6 +76,9 @@ def on_update_interval():
             yellow_card_two.vy = 60
         elif yellow_card_two.y == 56:
             yellow_card_two.vy = -60
+        if Player.player_sprite.x <= 398 and Player.player_sprite.y >= 376 and Player.player_sprite.y <= 398:
+            red_card_animation(red_card_two)
+        print(Player.player_sprite)
 game.on_update_interval(500, on_update_interval) 
 
 
@@ -206,7 +209,7 @@ def create_enemies():
         enemy_list.append(yellow_card_one)
         enemy_list.append(yellow_card_two)
         red_card_one.set_position(25,150)
-        red_card_two.set_position(300,450)
+        red_card_two.set_position(300,440)
         yellow_card_one.set_position(216,170)
         yellow_card_two.set_position(400,56)
 
@@ -305,7 +308,7 @@ def red_card_animation(red_card_sprite: Sprite):
         animation.run_image_animation(red_card_sprite, assets.animation("""redCardFront"""), 200, True)
     else:
         animation.run_image_animation(red_card_sprite, assets.animation("""redCardBack"""), 200, True)
-    red_card_sprite.follow(Player.player_sprite, 80, 70)
+    red_card_sprite.follow(Player.player_sprite, 80, 80)
 
 def yellow_card_animation(yellow_card_sprite: Sprite):
     if Player.player_sprite.y > yellow_card_sprite.y:

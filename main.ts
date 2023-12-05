@@ -95,6 +95,11 @@ game.onUpdateInterval(500, function on_update_interval() {
             yellow_card_two.vy = -60
         }
         
+        if (Player.player_sprite.x <= 398 && Player.player_sprite.y >= 376 && Player.player_sprite.y <= 398) {
+            red_card_animation(red_card_two)
+        }
+        
+        console.log(Player.player_sprite)
     }
     
 })
@@ -239,7 +244,7 @@ function create_enemies() {
         enemy_list.push(yellow_card_one)
         enemy_list.push(yellow_card_two)
         red_card_one.setPosition(25, 150)
-        red_card_two.setPosition(300, 450)
+        red_card_two.setPosition(300, 440)
         yellow_card_one.setPosition(216, 170)
         yellow_card_two.setPosition(400, 56)
     }
@@ -341,7 +346,7 @@ function red_card_animation(red_card_sprite: Sprite) {
         animation.runImageAnimation(red_card_sprite, assets.animation`redCardBack`, 200, true)
     }
     
-    red_card_sprite.follow(Player.player_sprite, 80, 70)
+    red_card_sprite.follow(Player.player_sprite, 80, 80)
 }
 
 function yellow_card_animation(yellow_card_sprite: Sprite) {
