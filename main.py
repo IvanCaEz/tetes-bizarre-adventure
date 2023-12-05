@@ -14,7 +14,7 @@ switch_sprite: Sprite = None
 switch_sprite_two: Sprite = None
 ball_sprite: Sprite = None
 maxLevel = 4
-current_level = 2
+current_level = 1
 player_direction = 1
 player_sprite: Sprite = None
 ball_found = False
@@ -30,54 +30,34 @@ class Player:
     scene.camera_follow_sprite(Player.player_sprite)
     controller.move_sprite(Player.player_sprite, 100, 100)
 
-# Create enemies
-def create_enemies():
-    global current_level, enemy_list
-    if current_level == 1:
-        poopy_one = sprites.create(assets.image("""poopy left """), SpriteKind.poopy)
-        poopy_two = sprites.create(assets.image("""poopy left """), SpriteKind.poopy)
-        poopy_three = sprites.create(assets.image("""poopy left """), SpriteKind.poopy)
-        poopy_four = sprites.create(assets.image("""poopy left """), SpriteKind.poopy)
-        enemy_list.append(poopy_one)
-        enemy_list.append(poopy_two)
-        enemy_list.append(poopy_three)
-        enemy_list.append(poopy_four)
-        for enemySprite in enemy_list:
-            enemySprite.set_position(Math.random_range(20, 300), Math.random_range(10, 220))  
-    elif current_level == 2:
-        enemy_list = []
-        red_card_one = sprites.create(assets.image("""redCard base """), SpriteKind.red_card)
-        red_card_two = sprites.create(assets.image("""redCard base """), SpriteKind.red_card)
-        yellow_card_one = sprites.create(assets.image("""yellowCard base """), SpriteKind.yellow_card)
-        yellow_card_two = sprites.create(assets.image("""yellowCard base """), SpriteKind.yellow_card)
-        enemy_list.append(red_card_one)
-        enemy_list.append(red_card_two)
-        enemy_list.append(yellow_card_one)
-        enemy_list.append(yellow_card_two)
-        red_card_one.set_position(25,150)
-        red_card_two.set_position(300,450)
-        yellow_card_one.set_position(216,170)
-        yellow_card_two.set_position(400,56)
+def poopy_behavior():
+    for poopy in sprites.all_of_kind(SpriteKind.poopy):
+        # follow the player
+        if poopy.x < Player.player_sprite.x:
+            poopy.vx = 20
+            animation.run_image_animation(poopy, assets.animation("""poopy animated right"""), 200, True)
+            poopy.set_image(assets.image(""" poopy right """))
+        else:
+            poopy.vx = -20
+            animation.run_image_animation(poopy, assets.animation("""poopy animated left"""), 200, True)
+            poopy.set_image(assets.image(""" poopy left """))
+        if poopy.y < Player.player_sprite.y:
+            poopy.vy = 20
+        else:
+            poopy.vy = -20
+
+def generate_poopies(poopies_number: int):
+    global enemy_list
+    for index in range(poopies_number):
+        enemy_list.append(sprites.create(assets.image("""poopy left """), SpriteKind.poopy))
+    for enemySprite in enemy_list:
+        enemySprite.set_position(Math.random_range(20, 300), Math.random_range(10, 220))
 
 
 def on_update_interval():
     global current_level, enemy_list
-
     if current_level == 1:
-        for poopy in sprites.all_of_kind(SpriteKind.poopy):
-            # follow the player
-            if poopy.x < Player.player_sprite.x:
-                poopy.vx = 20
-                animation.run_image_animation(poopy, assets.animation("""poopy animated right"""), 200, True)
-                poopy.set_image(assets.image(""" poopy right """))
-            else:
-                poopy.vx = -20
-                animation.run_image_animation(poopy, assets.animation("""poopy animated left"""), 200, True)
-                poopy.set_image(assets.image(""" poopy left """))
-            if poopy.y < Player.player_sprite.y:
-                poopy.vy = 20
-            else:
-                poopy.vy = -20
+        poopy_behavior()
     if current_level == 2:
         red_card_one = enemy_list[0]
         red_card_two = enemy_list[1]
@@ -86,22 +66,16 @@ def on_update_interval():
         # The red card one activates when the player passes that location
         if Player.player_sprite.x >= 8 and Player.player_sprite.x <= 40 and Player.player_sprite.y <= 232:
             red_card_animation(red_card_one)
-
         yellow_card_animation(yellow_card_one)
         yellow_card_animation(yellow_card_two)
-
         if yellow_card_one.x == 216:
             yellow_card_one.vx = 60
-            print("der")
         elif yellow_card_one.x == 296:
             yellow_card_one.vx = -60
-            print("izq")
         if yellow_card_two.y == 24:
             yellow_card_two.vy = 60
-            print("arriba")
         elif yellow_card_two.y == 56:
             yellow_card_two.vy = -60
-            print("abajo")
 game.on_update_interval(500, on_update_interval) 
 
 
@@ -158,15 +132,14 @@ def on_a_pressed():
     print(player_direction)
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
-# Yellow card on hit projectile
+# Overlap enemy on hit projectile
 def on_overlap_projectile_with_enemy(sprite, otherSprite):
     sprites.destroy(otherSprite, effects.spray, 200)
     sprites.destroy(sprite, effects.cool_radial, 200)
     info.set_score(info.score()+50)
-
 sprites.on_overlap(SpriteKind.projectile, SpriteKind.yellow_card, on_overlap_projectile_with_enemy)
 sprites.on_overlap(SpriteKind.projectile, SpriteKind.red_card, on_overlap_projectile_with_enemy)
-sprites.on_overlap(SpriteKind.projectile, SpriteKind.red_card, on_overlap_projectile_with_enemy)
+sprites.on_overlap(SpriteKind.projectile, SpriteKind.poopy, on_overlap_projectile_with_enemy)
 
 # On hit wall
 def on_hit_wall(sprite, location):
@@ -215,22 +188,48 @@ def on_hit_wall(sprite, location):
         pass
 scene.on_hit_wall(SpriteKind.player, on_hit_wall)
 
-def reset_level():
-    global current_level, switch_sprite, switch_sprite_two, treasure_sprite, ball_sprite
+
+# Create enemies
+def create_enemies():
+    global current_level, enemy_list
     if current_level == 1:
+        enemy_list = []
+        generate_poopies(3)
+    elif current_level == 2:
+        enemy_list = []
+        red_card_one = sprites.create(assets.image("""redCard base """), SpriteKind.red_card)
+        red_card_two = sprites.create(assets.image("""redCard base """), SpriteKind.red_card)
+        yellow_card_one = sprites.create(assets.image("""yellowCard base """), SpriteKind.yellow_card)
+        yellow_card_two = sprites.create(assets.image("""yellowCard base """), SpriteKind.yellow_card)
+        enemy_list.append(red_card_one)
+        enemy_list.append(red_card_two)
+        enemy_list.append(yellow_card_one)
+        enemy_list.append(yellow_card_two)
+        red_card_one.set_position(25,150)
+        red_card_two.set_position(300,450)
+        yellow_card_one.set_position(216,170)
+        yellow_card_two.set_position(400,56)
+
+
+
+def reset_level():
+    global current_level, switch_sprite, switch_sprite_two, treasure_sprite, ball_sprite, enemy_list
+    if current_level == 1:
+        for enemy in enemy_list:
+            enemy.destroy()
         switch_sprite.destroy()
         treasure_sprite.destroy()
-
-
+        
 # On overlap stairs
 def on_on_overlap_stairs(SpriteKind, otherSprite):
     global current_level
     if current_level == maxLevel:
         game.over(True)
     else:
+        print("se resetea el level")
         stair_sprite.destroy()
-        current_level = current_level + 1
         reset_level()
+        current_level = current_level + 1
         select_levels()
 sprites.on_overlap(SpriteKind.player, SpriteKind.goal, on_on_overlap_stairs)
 
