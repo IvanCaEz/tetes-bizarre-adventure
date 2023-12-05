@@ -3,10 +3,8 @@ namespace SpriteKind {
     export const treasure = SpriteKind.create()
     export const switch_ = SpriteKind.create()
     export const poopy = SpriteKind.create()
-    export const bat = SpriteKind.create()
-    export const ghost = SpriteKind.create()
-    export const red_card = SpriteKind.create()
     export const yellow_card = SpriteKind.create()
+    export const red_card = SpriteKind.create()
     export const ball = SpriteKind.create()
 }
 
@@ -31,6 +29,106 @@ namespace Player {
     controller.moveSprite(Player.player_sprite, 100, 100)
 }
 
+//  Create enemies
+function create_enemies() {
+    let poopy_one: Sprite;
+    let poopy_two: Sprite;
+    let poopy_three: Sprite;
+    let poopy_four: Sprite;
+    let red_card_one: Sprite;
+    let red_card_two: Sprite;
+    let yellow_card_one: Sprite;
+    let yellow_card_two: Sprite;
+    
+    if (current_level == 1) {
+        poopy_one = sprites.create(assets.image`poopy left `, SpriteKind.poopy)
+        poopy_two = sprites.create(assets.image`poopy left `, SpriteKind.poopy)
+        poopy_three = sprites.create(assets.image`poopy left `, SpriteKind.poopy)
+        poopy_four = sprites.create(assets.image`poopy left `, SpriteKind.poopy)
+        enemy_list.push(poopy_one)
+        enemy_list.push(poopy_two)
+        enemy_list.push(poopy_three)
+        enemy_list.push(poopy_four)
+        for (let enemySprite of enemy_list) {
+            enemySprite.setPosition(Math.randomRange(20, 300), Math.randomRange(10, 220))
+        }
+    } else if (current_level == 2) {
+        enemy_list = []
+        red_card_one = sprites.create(assets.image`redCard base `, SpriteKind.red_card)
+        red_card_two = sprites.create(assets.image`redCard base `, SpriteKind.red_card)
+        yellow_card_one = sprites.create(assets.image`yellowCard base `, SpriteKind.yellow_card)
+        yellow_card_two = sprites.create(assets.image`yellowCard base `, SpriteKind.yellow_card)
+        enemy_list.push(red_card_one)
+        enemy_list.push(red_card_two)
+        enemy_list.push(yellow_card_one)
+        enemy_list.push(yellow_card_two)
+        red_card_one.setPosition(25, 150)
+        red_card_two.setPosition(300, 450)
+        yellow_card_one.setPosition(216, 170)
+        yellow_card_two.setPosition(400, 56)
+    }
+    
+}
+
+game.onUpdateInterval(500, function on_update_interval() {
+    let red_card_one: Sprite;
+    let red_card_two: Sprite;
+    let yellow_card_one: Sprite;
+    let yellow_card_two: Sprite;
+    
+    if (current_level == 1) {
+        for (let poopy of sprites.allOfKind(SpriteKind.poopy)) {
+            //  follow the player
+            if (poopy.x < Player.player_sprite.x) {
+                poopy.vx = 20
+                animation.runImageAnimation(poopy, assets.animation`poopy animated right`, 200, true)
+                poopy.setImage(assets.image` poopy right `)
+            } else {
+                poopy.vx = -20
+                animation.runImageAnimation(poopy, assets.animation`poopy animated left`, 200, true)
+                poopy.setImage(assets.image` poopy left `)
+            }
+            
+            if (poopy.y < Player.player_sprite.y) {
+                poopy.vy = 20
+            } else {
+                poopy.vy = -20
+            }
+            
+        }
+    }
+    
+    if (current_level == 2) {
+        red_card_one = enemy_list[0]
+        red_card_two = enemy_list[1]
+        yellow_card_one = enemy_list[2]
+        yellow_card_two = enemy_list[3]
+        //  The red card one activates when the player passes that location
+        if (Player.player_sprite.x >= 8 && Player.player_sprite.x <= 40 && Player.player_sprite.y <= 232) {
+            red_card_animation(red_card_one)
+        }
+        
+        yellow_card_animation(yellow_card_one)
+        yellow_card_animation(yellow_card_two)
+        if (yellow_card_one.x == 216) {
+            yellow_card_one.vx = 60
+            console.log("der")
+        } else if (yellow_card_one.x == 296) {
+            yellow_card_one.vx = -60
+            console.log("izq")
+        }
+        
+        if (yellow_card_two.y == 24) {
+            yellow_card_two.vy = 60
+            console.log("arriba")
+        } else if (yellow_card_two.y == 56) {
+            yellow_card_two.vy = -60
+            console.log("abajo")
+        }
+        
+    }
+    
+})
 controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
     
     animation.runImageAnimation(Player.player_sprite, assets.animation`walkRight`, 200, true)
@@ -83,6 +181,16 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     
     console.log(player_direction)
 })
+//  Yellow card on hit projectile
+function on_overlap_projectile_with_enemy(sprite: Sprite, otherSprite: Sprite) {
+    sprites.destroy(otherSprite, effects.spray, 200)
+    sprites.destroy(sprite, effects.coolRadial, 200)
+    info.setScore(info.score() + 50)
+}
+
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.yellow_card, on_overlap_projectile_with_enemy)
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.red_card, on_overlap_projectile_with_enemy)
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.red_card, on_overlap_projectile_with_enemy)
 //  On hit wall
 scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location: tiles.Location) {
     
@@ -143,43 +251,9 @@ scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location
 })
 function reset_level() {
     
-    if (current_level == 2) {
-        switch_sprite.setImage(sprites.dungeon.greenSwitchUp)
-        treasure_sprite.setImage(sprites.dungeon.chestClosed)
-    }
-    
-}
-
-//  Create enemies
-function create_enemies() {
-    let red_card_one: Sprite;
-    let red_card_two: Sprite;
-    let yellow_card_one: Sprite;
-    let yellow_card_two: Sprite;
-    
     if (current_level == 1) {
-        for (let index = 0; index < 5; index++) {
-            enemy_list.push(sprites.create(assets.image`
-                poopy left
-            `, SpriteKind.poopy))
-        }
-        for (let enemySprite of sprites.allOfKind(SpriteKind.poopy)) {
-            enemySprite.setPosition(Math.randomRange(20, 300), Math.randomRange(10, 220))
-        }
-    } else if (current_level == 2) {
-        enemy_list = []
-        red_card_one = sprites.create(assets.image`redCard base `, SpriteKind.red_card)
-        red_card_two = sprites.create(assets.image`redCard base `, SpriteKind.red_card)
-        yellow_card_one = sprites.create(assets.image`yellowCard base `, SpriteKind.yellow_card)
-        yellow_card_two = sprites.create(assets.image`yellowCard base `, SpriteKind.yellow_card)
-        enemy_list.push(red_card_one)
-        enemy_list.push(red_card_two)
-        enemy_list.push(yellow_card_one)
-        enemy_list.push(yellow_card_two)
-        red_card_one.setPosition(25, 150)
-        red_card_two.setPosition(300, 450)
-        yellow_card_one.setPosition(228, 170)
-        yellow_card_two.setPosition(400, 55)
+        switch_sprite.destroy()
+        treasure_sprite.destroy()
     }
     
 }
@@ -192,7 +266,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.goal, function on_on_overlap_sta
     } else {
         stair_sprite.destroy()
         current_level = current_level + 1
-        // reset_level()
+        reset_level()
         select_levels()
     }
     
@@ -214,12 +288,15 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.ball, function on_on_overlap_bal
     ball_sprite.destroy()
 })
 //  On enemy collision
-sprites.onOverlap(SpriteKind.Player, SpriteKind.poopy, function on_on_overlap_enemy_poopy(SpriteKind: Sprite, otherSprite: Sprite) {
+function on_on_overlap_enemy(SpriteKind: Sprite, otherSprite: Sprite) {
     info.changeLifeBy(-1)
     sprites.destroy(otherSprite, effects.ashes, 200)
-    otherSprite.destroy()
     music.thump.play()
-})
+}
+
+sprites.onOverlap(SpriteKind.Player, SpriteKind.poopy, on_on_overlap_enemy)
+sprites.onOverlap(SpriteKind.Player, SpriteKind.yellow_card, on_on_overlap_enemy)
+sprites.onOverlap(SpriteKind.Player, SpriteKind.red_card, on_on_overlap_enemy)
 function create_level_one() {
     
     // music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
@@ -230,7 +307,7 @@ function create_level_one() {
     treasure_sprite.setPosition(25, 140)
     stair_sprite = sprites.create(sprites.dungeon.stairLarge, SpriteKind.goal)
     stair_sprite.setPosition(232, 200)
-    switch_sprite = sprites.create(sprites.dungeon.greenSwitchUp, SpriteKind.goal)
+    switch_sprite = sprites.create(sprites.dungeon.greenSwitchUp, SpriteKind.switch_)
     switch_sprite.setPosition(136, 8)
     create_enemies()
 }
@@ -256,63 +333,6 @@ function create_level_two() {
 }
 
 music.setVolume(40)
-game.onUpdateInterval(500, function on_update_interval() {
-    let red_card_one: Sprite;
-    let red_card_two: Sprite;
-    let yellow_card_one: Sprite;
-    let yellow_card_two: Sprite;
-    
-    if (current_level == 1) {
-        for (let poopy of sprites.allOfKind(SpriteKind.poopy)) {
-            //  follow the player
-            if (poopy.x < Player.player_sprite.x) {
-                poopy.vx = 20
-                animation.runImageAnimation(poopy, assets.animation`poopy animated right`, 200, true)
-                poopy.setImage(assets.image` poopy right `)
-            } else {
-                poopy.vx = -20
-                animation.runImageAnimation(poopy, assets.animation`poopy animated left`, 200, true)
-                poopy.setImage(assets.image` poopy left `)
-            }
-            
-            if (poopy.y < Player.player_sprite.y) {
-                poopy.vy = 20
-            } else {
-                poopy.vy = -20
-            }
-            
-        }
-    }
-    
-    if (current_level == 2) {
-        red_card_one = enemy_list[0]
-        red_card_two = enemy_list[1]
-        yellow_card_one = enemy_list[2]
-        yellow_card_two = enemy_list[3]
-        //  The red card one activates when the player passes that location
-        if (Player.player_sprite.x >= 8 && Player.player_sprite.x <= 40 && Player.player_sprite.y <= 232) {
-            red_card_animation(red_card_one)
-        }
-        
-        yellow_card_one.vx = -60
-        yellow_card_two.vy = -60
-    }
-    
-})
-scene.onHitWall(SpriteKind.yellow_card, function on_hit_wall_yellow_cards(sprite: Sprite, location: tiles.Location) {
-    if (location.x > 200) {
-        sprite.vx = 60
-        console.log("der")
-    } else if (location.x < 300) {
-        console.log("izq")
-        sprite.vx = -60
-    } else if (location.y > 8) {
-        sprite.vy = 60
-    } else if (location.y < 72) {
-        sprite.vy = -60
-    }
-    
-})
 function red_card_animation(red_card_sprite: Sprite) {
     if (Player.player_sprite.y > red_card_sprite.y) {
         animation.runImageAnimation(red_card_sprite, assets.animation`redCardFront`, 200, true)
@@ -330,7 +350,6 @@ function yellow_card_animation(yellow_card_sprite: Sprite) {
         animation.runImageAnimation(yellow_card_sprite, assets.animation`yellowCardBack`, 200, true)
     }
     
-    yellow_card_sprite.follow(Player.player_sprite, 60, 70)
 }
 
 function select_levels() {
