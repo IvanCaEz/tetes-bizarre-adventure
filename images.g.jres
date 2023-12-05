@@ -34,6 +34,21 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "ball idle"
     },
+    "image8": {
+        "data": "hwQQABAAAAAAAAD/AAAAAAAAAPIAAAAAAAAAAAAAAP////////8P8i8fISIiIg8AL/Iu/yIiDwAvIi8fLyIPAC8iIh8vIg8ALyIiHy8iDwAvIi8fLyIPAM/yLv8iwg8Azx/BzMzMDwD///////8P8gAAAAAAAAD/AAAA8gAAAAAAAAD/AAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "redCard base"
+    },
+    "image9": {
+        "data": "hwQQABAAAAAAAAD/AAAAAAAAAPIAAAAAAAAAAAAAAP////////8P8i8fISIiIg8AL/Iu/yIiDwAvIi8fLyIPAC8iIh8vIg8ALyIiHy8iDwAvIi8fLyIPAM/yLv8iwg8Azx/BzMzMDwD///////8P8gAAAAAAAAD/AAAA8gAAAAAAAAD/AAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "myImage"
+    },
+    "image10": {
+        "data": "hwQQABAAAAAAAPAPAAAAAAAA8AUAAAD/AAAAAAAAAPX///////8PAF/1EVVVVQ8AX/VxVvVVDwBf9RFVX1UPAF9VVVVfVQ8AX1VVVV9VDwBf9RFVX1UPAE/1cWb1RQ8AT/QRREREDwD///////8PAAAAAAAAAAD1AADwBQAAAP8AAPAPAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "yellowCard base"
+    },
     "anim1": {
         "namespace": "myAnimations",
         "id": "anim1",

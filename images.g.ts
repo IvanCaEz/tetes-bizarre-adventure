@@ -1,4 +1,4 @@
-// Código generado automáticamente. No editar.
+// Auto-generated code. Do not edit.
 namespace myImages {
 
     helpers._registerFactory("image", function(name: string) {
@@ -135,6 +135,63 @@ f 1 1 1 1 1 1 1 f f 1 1 1 f f f
 . . f f f f f f 1 1 f f f f . . 
 . . . f f f f f 1 1 f f f . . . 
 . . . . . f f f f f f . . . . . 
+`;
+            case "image8":
+            case "redCard base":return img`
+. . . f f f f f f f f f f . . . 
+. . . f 2 2 2 2 2 2 c c f . . . 
+. . . f f 2 2 2 2 2 2 f f . . . 
+. . . f 1 f 2 2 2 2 f 1 f . . . 
+. . . f 1 e f 2 2 f e 1 f . . . 
+. . . f 2 2 2 2 2 2 2 c f . . . 
+f 2 . f 2 f f f f f f c f . 2 f 
+f f . f 2 f 1 1 1 1 f c f . f f 
+. . . f 2 2 f f f f 2 c f . . . 
+. . . f 2 2 2 2 2 2 2 c f . . . 
+. . . f 2 2 2 2 2 2 2 c f . . . 
+. . . f 2 2 2 2 2 2 c c f . . . 
+. . . f f f f f f f f f f . . . 
+. . . . . . . . . . . . . . . . 
+. . f 2 . . . . . . . . 2 f . . 
+. . f f . . . . . . . . f f . . 
+`;
+            case "image9":
+            case "myImage":return img`
+. . . f f f f f f f f f f . . . 
+. . . f 2 2 2 2 2 2 c c f . . . 
+. . . f f 2 2 2 2 2 2 f f . . . 
+. . . f 1 f 2 2 2 2 f 1 f . . . 
+. . . f 1 e f 2 2 f e 1 f . . . 
+. . . f 2 2 2 2 2 2 2 c f . . . 
+f 2 . f 2 f f f f f f c f . 2 f 
+f f . f 2 f 1 1 1 1 f c f . f f 
+. . . f 2 2 f f f f 2 c f . . . 
+. . . f 2 2 2 2 2 2 2 c f . . . 
+. . . f 2 2 2 2 2 2 2 c f . . . 
+. . . f 2 2 2 2 2 2 c c f . . . 
+. . . f f f f f f f f f f . . . 
+. . . . . . . . . . . . . . . . 
+. . f 2 . . . . . . . . 2 f . . 
+. . f f . . . . . . . . f f . . 
+`;
+            case "image10":
+            case "yellowCard base":return img`
+. . . f f f f f f f f f f . . . 
+. . . f 5 5 5 5 5 5 4 4 f . . . 
+. . . f 5 5 5 5 5 5 5 4 f . . . 
+. . . f f f f 5 5 f f f f . . . 
+. . . f 1 1 1 5 5 1 1 1 f . . . 
+f f . f 1 7 1 5 5 1 7 1 f . f f 
+f 5 . f 5 6 5 5 5 5 6 4 f . 5 f 
+. . . f 5 5 5 5 5 5 6 4 f . . . 
+. . . f 5 5 f f f f 5 4 f . . . 
+. . . f 5 f 5 5 5 5 f 4 f . . . 
+. . . f 5 5 5 5 5 5 5 4 f . . . 
+. . . f 5 5 5 5 5 5 4 4 f . . . 
+. . . f f f f f f f f f f . . . 
+. . . . . . . . . . . . . . . . 
+. f 5 . . . . . . . . . . 5 f . 
+. f f . . . . . . . . . . f f . 
 `;
         }
         return null;
@@ -890,4 +947,4 @@ f 5 . f 4 5 5 5 5 5 5 5 f . . .
     })
 
 }
-// Código generado automáticamente. No editar.
+// Auto-generated code. Do not edit.
