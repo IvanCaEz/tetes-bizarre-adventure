@@ -14,12 +14,13 @@ let switch_sprite : Sprite = null
 let switch_sprite_two : Sprite = null
 let ball_sprite : Sprite = null
 let maxLevel = 4
-let current_level = 1
+let current_level = 3
 let player_direction = 1
 let player_sprite : Sprite = null
 let ball_found = false
 let kick_cooldown = false
 let enemy_list : Sprite[] = []
+let level_three_enemies_defeated = 0
 namespace Player {
     export const player_sprite = sprites.create(assets.image`
                         tete right
@@ -100,6 +101,8 @@ game.onUpdateInterval(500, function on_update_interval() {
         }
         
         console.log(Player.player_sprite)
+    } else if (current_level == 3) {
+        poopy_behavior()
     }
     
 })
@@ -247,6 +250,9 @@ function create_enemies() {
         red_card_two.setPosition(300, 440)
         yellow_card_one.setPosition(216, 170)
         yellow_card_two.setPosition(400, 56)
+    } else if (current_level == 3) {
+        enemy_list = []
+        generate_poopies(4)
     }
     
 }
@@ -259,6 +265,13 @@ function reset_level() {
         }
         switch_sprite.destroy()
         treasure_sprite.destroy()
+    } else if (current_level == 2) {
+        switch_sprite.destroy()
+        treasure_sprite.destroy()
+        switch_sprite_two.destroy()
+        for (let enemy_level_two of enemy_list) {
+            enemy_level_two.destroy()
+        }
     }
     
 }
@@ -269,7 +282,6 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.goal, function on_on_overlap_sta
     if (current_level == maxLevel) {
         game.over(true)
     } else {
-        console.log("se resetea el level")
         stair_sprite.destroy()
         reset_level()
         current_level = current_level + 1
@@ -338,6 +350,16 @@ function create_level_two() {
     create_enemies()
 }
 
+function create_level_three() {
+    
+    // music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
+    scene.setTileMapLevel(tilemap`
+        level three no exit
+    `)
+    Player.player_sprite.setPosition(200, 50)
+    create_enemies()
+}
+
 music.setVolume(40)
 function red_card_animation(red_card_sprite: Sprite) {
     if (Player.player_sprite.y > red_card_sprite.y) {
@@ -364,6 +386,8 @@ function select_levels() {
         create_level_one()
     } else if (current_level == 2) {
         create_level_two()
+    } else if (current_level == 3) {
+        create_level_three()
     }
     
 }

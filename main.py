@@ -14,12 +14,13 @@ switch_sprite: Sprite = None
 switch_sprite_two: Sprite = None
 ball_sprite: Sprite = None
 maxLevel = 4
-current_level = 1
+current_level = 3
 player_direction = 1
 player_sprite: Sprite = None
 ball_found = False
 kick_cooldown = False
 enemy_list: List[Sprite] = []
+level_three_enemies_defeated = 0
 
 @namespace
 class Player:
@@ -79,6 +80,8 @@ def on_update_interval():
         if Player.player_sprite.x <= 398 and Player.player_sprite.y >= 376 and Player.player_sprite.y <= 398:
             red_card_animation(red_card_two)
         print(Player.player_sprite)
+    elif current_level == 3:
+        poopy_behavior()
 game.on_update_interval(500, on_update_interval) 
 
 
@@ -212,6 +215,9 @@ def create_enemies():
         red_card_two.set_position(300,440)
         yellow_card_one.set_position(216,170)
         yellow_card_two.set_position(400,56)
+    elif current_level == 3:
+        enemy_list = []
+        generate_poopies(4)
 
 
 
@@ -222,6 +228,13 @@ def reset_level():
             enemy.destroy()
         switch_sprite.destroy()
         treasure_sprite.destroy()
+    elif current_level == 2:
+        switch_sprite.destroy()
+        treasure_sprite.destroy()
+        switch_sprite_two.destroy()
+        for enemy_level_two in enemy_list:
+            enemy_level_two.destroy()
+        
         
 # On overlap stairs
 def on_on_overlap_stairs(SpriteKind, otherSprite):
@@ -229,7 +242,6 @@ def on_on_overlap_stairs(SpriteKind, otherSprite):
     if current_level == maxLevel:
         game.over(True)
     else:
-        print("se resetea el level")
         stair_sprite.destroy()
         reset_level()
         current_level = current_level + 1
@@ -298,6 +310,16 @@ def create_level_two():
     ball_sprite.set_position(258, 46)
     create_enemies()
 
+
+def create_level_three():
+    global level_three_enemies_defeated
+    #music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
+    scene.set_tile_map_level(tilemap("""
+        level three no exit
+    """))
+    Player.player_sprite.set_position(200,50)
+    create_enemies()
+
 music.set_volume(40)
 
 
@@ -323,6 +345,8 @@ def select_levels():
         create_level_one()
     elif current_level == 2:
         create_level_two()
+    elif current_level == 3:
+        create_level_three()
 
 
 
