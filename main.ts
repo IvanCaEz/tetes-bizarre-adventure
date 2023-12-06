@@ -16,16 +16,17 @@ let switch_sprite_two : Sprite = null
 let heart_sprite : Sprite = null
 let ball_sprite : Sprite = null
 let maxLevel = 4
-let current_level = 3
+let current_level = 1
 let player_direction = 1
 let player_sprite : Sprite = null
 let ball_found = false
 let kick_cooldown = false
 let enemy_list : Sprite[] = []
+let changed_level = false
 let level_three_enemies_defeated = 0
 namespace Player {
     export const player_sprite = sprites.create(assets.image`
-                        tete right
+                        tete front
                     `, SpriteKind.Player)
     info.setLife(3)
     scene.cameraFollowSprite(Player.player_sprite)
@@ -93,6 +94,7 @@ game.onUpdateInterval(500, function on_update_interval() {
     }
     
     if (current_level == 2) {
+        poopy_behavior()
         red_card_one = enemy_list[0]
         red_card_two = enemy_list[1]
         yellow_card_one = enemy_list[2]
@@ -120,20 +122,49 @@ game.onUpdateInterval(500, function on_update_interval() {
             red_card_animation(red_card_two)
         }
         
-        console.log(Player.player_sprite)
     } else if (current_level == 3) {
         spawn_enemy = Math.randomRange(0, 100)
-        if (spawn_enemy < 10) {
-            generate_red_cards(1)
-        } else if (spawn_enemy < 20) {
-            generate_yellow_cards(1)
-        } else if (spawn_enemy < 35) {
-            generate_poopies(1)
+        if (level_three_enemies_defeated < 15) {
+            if (spawn_enemy < 10) {
+                generate_red_cards(1)
+            } else if (spawn_enemy < 20) {
+                generate_yellow_cards(1)
+            } else if (spawn_enemy < 35) {
+                generate_poopies(1)
+            }
+            
+            poopy_behavior()
+        } else if (level_three_enemies_defeated >= 15 && changed_level == false) {
+            changed_level = true
+            pause(500)
+            music.play(music.melodyPlayable(music.bigCrash), music.PlaybackMode.UntilDone)
+            scene.cameraShake(8, 500)
+            reset_level()
+            scene.setTileMapLevel(assets.tilemap`level three exit `)
         }
         
-        poopy_behavior()
-        if (level_three_enemies_defeated == 15) {
+        if (Player.player_sprite.y == 248) {
+            current_level = current_level + 1
+            select_levels()
+        }
+        
+    } else if (current_level == 4) {
+        if (Player.player_sprite.y >= 69) {
             game.gameOver(true)
+        }
+        
+    }
+    
+    console.log(Player.player_sprite)
+})
+//  Interval for spawning poopies in floor 2
+game.onUpdateInterval(1500, function on_update_interval_plus() {
+    let spawn_enemy: number;
+    
+    if (current_level == 2) {
+        spawn_enemy = Math.randomRange(0, 100)
+        if (spawn_enemy < 35) {
+            generate_poopies(1)
         }
         
     }
@@ -216,8 +247,6 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.hazardLava1, on_overlap_t
 //  On hit wall
 scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location: tiles.Location) {
     
-    console.log("X: " + location.x)
-    console.log("Y: " + location.y)
     if (current_level == 1) {
         if (location.x == 136 && location.y == 8) {
             if (switch_sprite.image == sprites.dungeon.greenSwitchUp) {
@@ -299,20 +328,34 @@ function create_enemies() {
     
 }
 
+//  Destroys the sprites of the current level
 function reset_level() {
     
     if (current_level == 1) {
-        for (let enemy of enemy_list) {
-            enemy.destroy()
+        for (let poopy of sprites.allOfKind(SpriteKind.poopy)) {
+            poopy.destroy()
         }
         switch_sprite.destroy()
         treasure_sprite.destroy()
     } else if (current_level == 2) {
+        for (let poopy_two of sprites.allOfKind(SpriteKind.poopy)) {
+            poopy_two.destroy()
+        }
         switch_sprite.destroy()
         treasure_sprite.destroy()
         switch_sprite_two.destroy()
         for (let enemy_level_two of enemy_list) {
             enemy_level_two.destroy()
+        }
+    } else if (current_level == 3) {
+        for (let poopy_three of sprites.allOfKind(SpriteKind.poopy)) {
+            poopy_three.destroy()
+        }
+        for (let yellow_card of sprites.allOfKind(SpriteKind.yellow_card)) {
+            yellow_card.destroy()
+        }
+        for (let red_card of sprites.allOfKind(SpriteKind.red_card)) {
+            red_card.destroy()
         }
     }
     
@@ -328,10 +371,13 @@ function drop_hearts(enemy_sprite: Sprite) {
     
 }
 
-//  On overlap hearts
+//  On overlap hearts (Max 5 hearts)
 sprites.onOverlap(SpriteKind.Player, SpriteKind.heart, function on_on_overlap_hearts(SpriteKind: Sprite, otherSprite: Sprite) {
-    info.setLife(info.life() + 1)
-    sprites.destroy(otherSprite, effects.hearts, 200)
+    if (info.life() < 5) {
+        info.setLife(info.life() + 1)
+        sprites.destroy(otherSprite, effects.hearts, 200)
+    }
+    
 })
 //  On overlap stairs
 sprites.onOverlap(SpriteKind.Player, SpriteKind.goal, function on_on_overlap_stairs(SpriteKind: Sprite, otherSprite: Sprite) {
@@ -351,6 +397,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.treasure, function on_on_overlap
     if (treasure_sprite.image == sprites.dungeon.chestClosed) {
         info.setScore(info.score() + 100)
         treasure_sprite.setImage(sprites.dungeon.chestOpen)
+        music.thump.play()
     }
     
 })
@@ -358,13 +405,13 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.treasure, function on_on_overlap
 sprites.onOverlap(SpriteKind.Player, SpriteKind.ball, function on_on_overlap_ball(SpriteKind: Sprite, otherSprite: Sprite) {
     
     ball_found = true
-    game.splash("You found your precious ball!")
-    game.splash("Now you can kick it with A")
+    game.showLongText("You found your precious ball! Now you can kick it with button A.", DialogLayout.Bottom)
+    Player.player_sprite.sayText("My precious...", 1000, null, 1, 7)
     ball_sprite.destroy()
 })
 //  On enemy collision
 function on_on_overlap_enemy(SpriteKind: Sprite, otherSprite: Sprite) {
-    // info.changeLifeBy(-1)
+    info.changeLifeBy(-1)
     sprites.destroy(otherSprite, effects.ashes, 200)
     music.thump.play()
 }
@@ -384,6 +431,7 @@ function create_level_one() {
     stair_sprite.setPosition(232, 200)
     switch_sprite = sprites.create(sprites.dungeon.greenSwitchUp, SpriteKind.switch_)
     switch_sprite.setPosition(136, 8)
+    Player.player_sprite.setPosition(33, 188)
     create_enemies()
 }
 
@@ -408,19 +456,30 @@ function create_level_two() {
 }
 
 function create_level_three() {
+    let heart_sprite: Sprite;
     
     ball_found = true
     // music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
     scene.setTileMapLevel(tilemap`
         level three no exit
     `)
-    let heart_sprite = sprites.create(assets.image`heart`, SpriteKind.heart)
-    heart_sprite.setPosition(150, 50)
-    Player.player_sprite.setPosition(200, 50)
+    Player.player_sprite.setPosition(129, 46)
+    game.splash("Welcome to the arena!")
+    game.showLongText("Defeat 15 enemies to be victorious, watch your step, the lava is hot.", DialogLayout.Bottom)
+    if (info.life() < 5) {
+        heart_sprite = sprites.create(assets.image`heart`, SpriteKind.heart)
+        heart_sprite.setPosition(150, 50)
+    }
+    
     create_enemies()
 }
 
-music.setVolume(40)
+function create_level_four() {
+    scene.setTileMapLevel(tilemap`level four`)
+    Player.player_sprite.setPosition(96, 6)
+    Player.player_sprite.sayText("Finally...", 1000, null, 1, 7)
+}
+
 function red_card_animation(red_card_sprite: Sprite) {
     if (Player.player_sprite.y > red_card_sprite.y) {
         animation.runImageAnimation(red_card_sprite, assets.animation`redCardFront`, 200, true)
@@ -429,6 +488,11 @@ function red_card_animation(red_card_sprite: Sprite) {
     }
     
     red_card_sprite.follow(Player.player_sprite, 80, 80)
+    let chance_to_say = Math.randomRange(0, 100)
+    if (chance_to_say < 20) {
+        red_card_sprite.sayText("HEY FOUL", 1000, null, 1, 2)
+    }
+    
 }
 
 function yellow_card_animation(yellow_card_sprite: Sprite) {
@@ -448,13 +512,15 @@ function select_levels() {
         create_level_two()
     } else if (current_level == 3) {
         create_level_three()
+    } else {
+        create_level_four()
     }
     
 }
 
-select_levels()
 info.onLifeZero(function on_life_zero() {
     sprites.destroy(player_sprite, effects.ashes, 200)
     music.wawawawaa.play()
     game.gameOver(false)
 })
+select_levels()

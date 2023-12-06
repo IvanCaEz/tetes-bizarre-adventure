@@ -16,18 +16,19 @@ switch_sprite_two: Sprite = None
 heart_sprite: Sprite = None
 ball_sprite: Sprite = None
 maxLevel = 4
-current_level = 3
+current_level = 1
 player_direction = 1
 player_sprite: Sprite = None
 ball_found = False
 kick_cooldown = False
 enemy_list: List[Sprite] = []
+changed_level = False
 level_three_enemies_defeated = 0
 
 @namespace
 class Player:
     player_sprite = sprites.create(assets.image("""
-                        tete right
+                        tete front
                     """), SpriteKind.player)
     info.set_life(3)
     scene.camera_follow_sprite(Player.player_sprite)
@@ -68,10 +69,11 @@ def generate_yellow_cards(yellow_cards_number: int):
 
 
 def on_update_interval():
-    global current_level, enemy_list, level_three_enemies_defeated
+    global current_level, enemy_list, level_three_enemies_defeated, changed_level
     if current_level == 1:
         poopy_behavior()
     if current_level == 2:
+        poopy_behavior()
         red_card_one = enemy_list[0]
         red_card_two = enemy_list[1]
         yellow_card_one = enemy_list[2]
@@ -91,20 +93,40 @@ def on_update_interval():
             yellow_card_two.vy = -60
         if Player.player_sprite.x <= 398 and Player.player_sprite.y >= 376 and Player.player_sprite.y <= 398:
             red_card_animation(red_card_two)
-        print(Player.player_sprite)
     elif current_level == 3:
         spawn_enemy = Math.random_range(0,100)
-        if spawn_enemy < 10:
-            generate_red_cards(1)
-        elif spawn_enemy < 20 :
-            generate_yellow_cards(1)
-        elif spawn_enemy < 35:
-            generate_poopies(1)
-        poopy_behavior()
-        if level_three_enemies_defeated == 15:
+        if level_three_enemies_defeated < 15:
+            if spawn_enemy < 10:
+                generate_red_cards(1)
+            elif spawn_enemy < 20 :
+                generate_yellow_cards(1)
+            elif spawn_enemy < 35:
+                generate_poopies(1)
+            poopy_behavior()
+        elif level_three_enemies_defeated >= 15 and changed_level == False:
+            changed_level = True
+            pause(500)
+            music.play(music.melody_playable(music.big_crash), music.PlaybackMode.UNTIL_DONE)
+            scene.camera_shake(8, 500)
+            reset_level()
+            scene.set_tile_map_level(assets.tilemap("""level three exit """))
+        if Player.player_sprite.y == 248:
+            current_level = current_level + 1
+            select_levels()
+    elif current_level == 4:
+        if Player.player_sprite.y >= 69:
             game.game_over(True)
+    print(Player.player_sprite)
 game.on_update_interval(500, on_update_interval) 
 
+# Interval for spawning poopies in floor 2
+def on_update_interval_plus():
+    global current_level
+    if current_level == 2:
+        spawn_enemy = Math.random_range(0,100)
+        if spawn_enemy < 35:
+            generate_poopies(1)
+game.on_update_interval(1500, on_update_interval_plus)
 
 def on_right_pressed():
     global player_direction
@@ -113,7 +135,6 @@ def on_right_pressed():
                         tete right
                     """))
     player_direction = 3
-
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def on_left_pressed():
@@ -180,8 +201,6 @@ scene.on_overlap_tile(SpriteKind.player, sprites.dungeon.hazard_lava1, on_overla
 # On hit wall
 def on_hit_wall(sprite, location):
     global current_level
-    print("X: "+location.x)
-    print("Y: "+location.y)
     if current_level == 1:
         if location.x == 136 and location.y == 8:
             if (switch_sprite.image == sprites.dungeon.green_switch_up):
@@ -246,22 +265,29 @@ def create_enemies():
         yellow_card_one.set_position(216,170)
         yellow_card_two.set_position(400,56)
     
-
-
-
+# Destroys the sprites of the current level
 def reset_level():
     global current_level, switch_sprite, switch_sprite_two, treasure_sprite, ball_sprite, enemy_list
     if current_level == 1:
-        for enemy in enemy_list:
-            enemy.destroy()
+        for poopy in sprites.all_of_kind(SpriteKind.poopy):
+            poopy.destroy()
         switch_sprite.destroy()
         treasure_sprite.destroy()
     elif current_level == 2:
+        for poopy_two in sprites.all_of_kind(SpriteKind.poopy):
+            poopy_two.destroy()
         switch_sprite.destroy()
         treasure_sprite.destroy()
         switch_sprite_two.destroy()
         for enemy_level_two in enemy_list:
             enemy_level_two.destroy()
+    elif current_level == 3:
+        for poopy_three in sprites.all_of_kind(SpriteKind.poopy):
+            poopy_three.destroy()
+        for yellow_card in sprites.all_of_kind(SpriteKind.yellow_card):
+            yellow_card.destroy()
+        for red_card in sprites.all_of_kind(SpriteKind.red_card):
+            red_card.destroy()
 
 # 15% chance for an enemy to drop a heart
 def drop_hearts(enemy_sprite: Sprite):
@@ -270,10 +296,11 @@ def drop_hearts(enemy_sprite: Sprite):
         heart_sprite_generated.set_position(enemy_sprite.x, enemy_sprite.y)
 
 
-# On overlap hearts
+# On overlap hearts (Max 5 hearts)
 def on_on_overlap_hearts(SpriteKind, otherSprite):
-    info.set_life(info.life()+1)
-    sprites.destroy(otherSprite, effects.hearts, 200)
+    if info.life() < 5:
+        info.set_life(info.life()+1)
+        sprites.destroy(otherSprite, effects.hearts, 200)
 sprites.on_overlap(SpriteKind.player, SpriteKind.heart, on_on_overlap_hearts)
 
 
@@ -294,23 +321,25 @@ def on_on_overlap_treasure(SpriteKind, otherSprite):
     if (treasure_sprite.image == sprites.dungeon.chest_closed):
         info.set_score(info.score()+100)
         treasure_sprite.set_image(sprites.dungeon.chest_open)
+        music.thump.play()
+        
 sprites.on_overlap(SpriteKind.player, SpriteKind.treasure, on_on_overlap_treasure)
 
 # On overlap player with ball (item)
 def on_on_overlap_ball(SpriteKind, otherSprite):
     global ball_found
     ball_found = True
-    game.splash("You found your precious ball!")
-    game.splash("Now you can kick it with A")
+    game.show_long_text("You found your precious ball! Now you can kick it with button A.", DialogLayout.BOTTOM)
+    Player.player_sprite.say_text("My precious...", 1000, None, 1, 7)
     ball_sprite.destroy()
 sprites.on_overlap(SpriteKind.player, SpriteKind.ball, on_on_overlap_ball)
 
 
 # On enemy collision
 def on_on_overlap_enemy(SpriteKind, otherSprite):
-        #info.changeLifeBy(-1)
-        sprites.destroy(otherSprite, effects.ashes, 200)
-        music.thump.play()
+    info.changeLifeBy(-1)
+    sprites.destroy(otherSprite, effects.ashes, 200)
+    music.thump.play()
 sprites.on_overlap(SpriteKind.player, SpriteKind.poopy, on_on_overlap_enemy)
 sprites.on_overlap(SpriteKind.player, SpriteKind.yellow_card, on_on_overlap_enemy)
 sprites.on_overlap(SpriteKind.player, SpriteKind.red_card, on_on_overlap_enemy)
@@ -328,7 +357,7 @@ def create_level_one():
     stair_sprite.set_position(232, 200)
     switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.switch)
     switch_sprite.set_position(136, 8)
-    
+    Player.player_sprite.set_position(33, 188)
     create_enemies()
 
 def create_level_two():
@@ -356,17 +385,22 @@ def create_level_three():
     global level_three_enemies_defeated, ball_found
     ball_found = True
     #music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
+    
     scene.set_tile_map_level(tilemap("""
         level three no exit
     """))
-    heart_sprite = sprites.create(assets.image("""heart"""), SpriteKind.heart)
-    heart_sprite.set_position(150, 50)
-    Player.player_sprite.set_position(200,50)
+    Player.player_sprite.set_position(129,46)
+    game.splash("Welcome to the arena!")
+    game.show_long_text("Defeat 15 enemies to be victorious, watch your step, the lava is hot.", DialogLayout.BOTTOM)
+    if info.life() < 5:
+        heart_sprite = sprites.create(assets.image("""heart"""), SpriteKind.heart)
+        heart_sprite.set_position(150, 50)
     create_enemies()
 
-music.set_volume(40)
-
-
+def create_level_four():
+    scene.set_tile_map_level(tilemap("""level four"""))
+    Player.player_sprite.set_position(96,6)
+    Player.player_sprite.say_text("Finally...",1000, None, 1, 7)
 
 
 def red_card_animation(red_card_sprite: Sprite):
@@ -375,6 +409,10 @@ def red_card_animation(red_card_sprite: Sprite):
     else:
         animation.run_image_animation(red_card_sprite, assets.animation("""redCardBack"""), 200, True)
     red_card_sprite.follow(Player.player_sprite, 80, 80)
+    chance_to_say = Math.random_range(0,100)
+    if chance_to_say < 20:
+        red_card_sprite.say_text("HEY FOUL", 1000, None, 1, 2)
+
 
 def yellow_card_animation(yellow_card_sprite: Sprite):
     if Player.player_sprite.y > yellow_card_sprite.y:
@@ -391,12 +429,14 @@ def select_levels():
         create_level_two()
     elif current_level == 3:
         create_level_three()
-
-
-select_levels()
+    else:
+        create_level_four()
 
 def on_life_zero():
     sprites.destroy(player_sprite, effects.ashes, 200)
     music.wawawawaa.play()
     game.game_over(False)
 info.on_life_zero(on_life_zero)
+
+
+select_levels()
