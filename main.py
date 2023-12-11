@@ -8,6 +8,8 @@ class SpriteKind:
     red_card = SpriteKind.create()
     ball = SpriteKind.create()
     heart = SpriteKind.create()
+    menu = SpriteKind.create()
+    selector = SpriteKind.create()
 
 treasure_sprite: Sprite = None
 stair_sprite: Sprite = None
@@ -15,16 +17,23 @@ switch_sprite: Sprite = None
 switch_sprite_two: Sprite = None
 heart_sprite: Sprite = None
 ball_sprite: Sprite = None
+play_sprite: Sprite = None
+player_sprite: Sprite = None
+how_to_play_sprite: Sprite = None
+credits_sprite: Sprite = None
+exit_sprite: Sprite = None
 maxLevel = 4
 current_level = 1
 player_direction = 1
-player_sprite: Sprite = None
 ball_found = False
 enemy_list: List[Sprite] = []
 changed_level = False
 level_three_enemies_defeated = 0
 last_pressed = 0
 kick_cooldown_time = 500
+menu_option = 1
+selector_sprite: Sprite = None
+in_menu = True
 
 @namespace
 class Player:
@@ -32,8 +41,72 @@ class Player:
                         tete front
                     """), SpriteKind.player)
     info.set_life(3)
-    scene.camera_follow_sprite(Player.player_sprite)
-    controller.move_sprite(Player.player_sprite, 100, 100)
+
+# Shows the menu and it's options
+def start_menu():
+    global selector_sprite, play_sprite, how_to_play_sprite, credits_sprite, exit_sprite
+    scene.set_background_image(sprites.background.cityscape)
+    Player.player_sprite.set_position(20,90)
+    play_sprite = sprites.create(assets.image("""PlayButtonSelected"""), SpriteKind.menu)
+    play_sprite.set_position(80, 30)
+    how_to_play_sprite = sprites.create(assets.image("""HowToButton"""), SpriteKind.menu)
+    how_to_play_sprite.set_position(80, 50)
+    credits_sprite = sprites.create(assets.image("""CreditsButton"""), SpriteKind.menu)
+    credits_sprite.set_position(80, 70)
+    exit_sprite = sprites.create(assets.image("""ExitButton"""), SpriteKind.menu)
+    exit_sprite.set_position(80, 90)
+    selector_sprite = sprites.create(assets.image("""selector"""), SpriteKind.selector)
+    selector_sprite.set_position(30, 30)
+        
+
+# Moves the selector sprite through the menu
+def select_option():
+    global selector_sprite, menu_option, play_sprite, how_to_play_sprite, credits_sprite, exit_sprite
+    if menu_option == 1:
+        selector_sprite.set_position(30, 30)
+        paint_menu_buttons(1)
+    elif menu_option == 2:
+        selector_sprite.set_position(30, 50)
+        paint_menu_buttons(2)
+    elif menu_option == 3:
+        selector_sprite.set_position(30, 70)
+        paint_menu_buttons(3)
+    elif menu_option == 4:
+        selector_sprite.set_position(30, 90)
+        paint_menu_buttons(4)
+
+# Paints the menu buttons based on the position
+def paint_menu_buttons(menu_option: int):
+    global selector_sprite, menu_option, play_sprite, how_to_play_sprite, credits_sprite, exit_sprite
+    if menu_option == 1:
+        play_sprite.set_image(assets.image("""PlayButtonSelected"""))
+        how_to_play_sprite.set_image(assets.image("""HowToButton"""))
+        credits_sprite.set_image(assets.image("""CreditsButton"""))
+        exit_sprite.set_image(assets.image("""ExitButton"""))
+    elif menu_option == 2:
+        play_sprite.set_image(assets.image("""PlayButton"""))
+        how_to_play_sprite.set_image(assets.image("""HowToButtonSelected"""))
+        credits_sprite.set_image(assets.image("""CreditsButton"""))
+        exit_sprite.set_image(assets.image("""ExitButton"""))
+    elif menu_option == 3:
+        play_sprite.set_image(assets.image("""PlayButton"""))
+        how_to_play_sprite.set_image(assets.image("""HowToButton"""))
+        credits_sprite.set_image(assets.image("""CreditsButtonSelected"""))
+        exit_sprite.set_image(assets.image("""ExitButton"""))
+
+    elif menu_option == 4:
+        play_sprite.set_image(assets.image("""PlayButton"""))
+        how_to_play_sprite.set_image(assets.image("""HowToButton"""))
+        credits_sprite.set_image(assets.image("""CreditsButton"""))
+        exit_sprite.set_image(assets.image("""ExitButtonSelected"""))
+# Destroy the menu sprites
+def destroy_menu():
+    global selector_sprite, menu_option, play_sprite, how_to_play_sprite, credits_sprite, exit_sprite
+    selector_sprite.destroy()
+    play_sprite.destroy()
+    how_to_play_sprite.destroy()
+    credits_sprite.destroy()
+    exit_sprite.destroy()
 
 
 # Behavior of the Poopy enemy (follows the player and animates based in the direction they are facing)
@@ -153,43 +226,65 @@ def on_left_pressed():
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
 def on_up_pressed():
-    global player_direction
-    animation.run_image_animation(Player.player_sprite, assets.animation(""" backWalk """), 200, True)
-    Player.player_sprite.set_image(assets.image(""" tete back """))
-    player_direction = 1
+    global player_direction, menu_option, in_menu
+    if in_menu == True:
+        if menu_option > 1:
+            menu_option = menu_option - 1
+            select_option()
+    else:
+        animation.run_image_animation(Player.player_sprite, assets.animation(""" backWalk """), 200, True)
+        Player.player_sprite.set_image(assets.image(""" tete back """))
+        player_direction = 1
 controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
 def on_down_pressed():
-    global player_direction
-    animation.run_image_animation(Player.player_sprite, assets.animation("""frontWalk"""), 200, True)
-    Player.player_sprite.set_image(assets.image(""" tete front """))
-    player_direction = 2
+    global player_direction, in_menu, menu_option
+    if in_menu == True:
+        if menu_option < 4:
+            menu_option = menu_option + 1
+            select_option()
+    else:
+        animation.run_image_animation(Player.player_sprite, assets.animation("""frontWalk"""), 200, True)
+        Player.player_sprite.set_image(assets.image(""" tete front """))
+        player_direction = 2
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
 # Fires a projectile when A is pressed in the direction the player is facing
 def on_a_pressed():
-    global player_direction, ball_found, last_pressed, kick_cooldown_time
-    if ball_found and game.runtime() - last_pressed >= kick_cooldown_time:
-        if player_direction == 1:
-            projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 0, -110)
-            music.pewPew.play()
-            animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
-            last_pressed = game.runtime()
-        elif player_direction == 2:
-            projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 0, 110)
-            music.pewPew.play()
-            animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
-            last_pressed = game.runtime()
-        elif player_direction == 3:
-            projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 110, 0)
-            music.pewPew.play()
-            animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
-            last_pressed = game.runtime()
-        elif player_direction == 4:
-            projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, -110, 0)
-            music.pewPew.play()
-            animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
-            last_pressed = game.runtime()
+    global player_direction, ball_found, last_pressed, kick_cooldown_time, menu_option, in_menu
+    if in_menu == True:
+        if menu_option == 1:
+            select_levels()
+            destroy_menu()
+            in_menu = False
+        elif menu_option == 2:
+            game.show_long_text("How To Play\n \n Joystick:\nUse the joystick to move your character around the map\nA button:\n Once you unlock the football you can shoot your enemies with a kick attack", DialogLayout.FULL)
+        elif menu_option == 3:
+            game.show_long_text("Credits\n \nGame made by Ivan Martinez and Joao Lopes.\n \n Inspired by the greatest team in the World Real Betis Balompié!", DialogLayout.FULL)
+        elif menu_option == 4:
+            pass
+    else:
+        if ball_found and game.runtime() - last_pressed >= kick_cooldown_time:
+            if player_direction == 1:
+                projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 0, -110)
+                music.pewPew.play()
+                animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
+                last_pressed = game.runtime()
+            elif player_direction == 2:
+                projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 0, 110)
+                music.pewPew.play()
+                animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
+                last_pressed = game.runtime()
+            elif player_direction == 3:
+                projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 110, 0)
+                music.pewPew.play()
+                animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
+                last_pressed = game.runtime()
+            elif player_direction == 4:
+                projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, -110, 0)
+                music.pewPew.play()
+                animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
+                last_pressed = game.runtime()
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
 # Overlap enemy on hit projectile
@@ -370,6 +465,8 @@ def create_level_one():
     stair_sprite.set_position(232, 200)
     switch_sprite = sprites.create(sprites.dungeon.green_switch_up, SpriteKind.switch)
     switch_sprite.set_position(136, 8)
+    scene.camera_follow_sprite(Player.player_sprite)
+    controller.move_sprite(Player.player_sprite, 100, 100)
     Player.player_sprite.set_position(33, 188)
     create_enemies()
 
@@ -433,7 +530,7 @@ def yellow_card_animation(yellow_card_sprite: Sprite):
     else:
         animation.run_image_animation(yellow_card_sprite, assets.animation("""yellowCardBack"""), 200, True)
 
-select_levels()
+#select_levels()
 
 # Function to control the levels
 def select_levels():
@@ -447,8 +544,11 @@ def select_levels():
     else:
         create_level_four()
 
+
+
+start_menu()
 def on_life_zero():
-    sprites.destroy(player_sprite, effects.ashes, 200)
+    sprites.destroy(Player.player_sprite, effects.ashes, 200)
     music.wawawawaa.play()
     game.game_over(False)
 info.on_life_zero(on_life_zero)

@@ -54,6 +54,51 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "redCardBack"
     },
+    "image12": {
+        "data": "hwQgABAAAABmZmZmZmZmZmaZmZmZmZlmlpmZmZmZmWmW////////aZafmfnMzMxplp+Z+ZyZmWmWn5n5nJmZaZafmfmcmZlplvz/z5mZmWmWycycmZmZaZaZmZmZmZlplpmZ/////2mWmZnMzMzMaZaZmZmZmZlplpmZmfn/n2mWmZmZn5n5aZaZmZmfmflplpmZmZ+Z+WmWmZmZn5n5aZaZmZn8//9plpmZmcnMzGmWmZmZmZmZaZaZmZn/n5lplpmZmZn5mWmWmZmZmfmZaZaZmZmZ+flplpmZmf//z2mWmZmZzMycaZaZmZmZmZlplpmZmZmZmWlmmZmZmZmZZmZmZmZmZmZm",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "PlayButton"
+    },
+    "image13": {
+        "data": "hwQgABAAAADu7u7u7u7u7u5ERERERETuTkRERERERORO////////5E5PRPTMzMzkTk9E9ExEROROT0T0TERE5E5PRPRMRETkTvz/z0REROROxMxMRERE5E5ERERERETkTkRE/////+RORETMzMzM5E5ERERERETkTkRERPT/T+RORERET0T05E5ERERPRPTkTkRERE9E9ORORERET0T05E5ERET8///kTkRERMTMzORORERERERE5E5ERET/T0TkTkRERET0RORORERERPRE5E5ERERE9PTkTkRERP//z+ROREREzMxM5E5ERERERETkTkREREREROTuRERERERE7u7u7u7u7u7u",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "PlayButtonSelected"
+    },
+    "image15": {
+        "data": "hwRIABAAAADu7u7u7u7u7u5ERERERETuTkRERERERORO////////5E7MzPzPzMzkTkRE9E9ERORORET0T0RE5E5ERPRPRETkTv///////+ROzMzMzMzM5E5ERERERETkTkRERPT/T+RORERET0T05E5ERERPRPTkTkRERE9E9ORORERET0T05E5ERET8/8/kTkRERMTMTORORERERERE5E5ERET//0/kTkRERERE9ORORERERET05E5ERET0/0/kTkRERERE9ORORERERET05E5ERET//8/kTkRERMzMTORORERERERE5E5PRERERETkTk9EREREROROT0RERERE5E7////////kTs/MzMzMzOROT0RERERE5E5PRET0/0/kTkxERE9E9ORORERET0T05E5ERERPRPTkTkRERE9E9ORORERE/P/P5E5ERETEzEzkTkRERERERORORERERERE5E5ERERERETkTv///////+ROT0T0zMzM5E5PRPRMRETkTk9E9ExEROROT0T0TERE5E78/89ERETkTsTMTERERORORERERERE5E5ERP/////kTkREzMzMzORORERERERE5E5ERET0/0/kTkRERE9E9ORORERET0T05E5ERERPRPTkTkRERE9E9ORORERE/P//5E5ERETEzMzkTkRERERERORORERE/09E5E5ERERE9ETkTkRERET0RORORERERPT05E5ERET//8/kTkRERMzMTORORERERERE5O5ERERERETu7u7u7u7u7u4=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "HowToButtonSelected"
+    },
+    "image14": {
+        "data": "hwRIABAAAABmZmZmZmZmZmaZmZmZmZlmlpmZmZmZmWmW////////aZbMzPzPzMxplpmZ+Z+ZmWmWmZn5n5mZaZaZmfmfmZlplv///////2mWzMzMzMzMaZaZmZmZmZlplpmZmfn/n2mWmZmZn5n5aZaZmZmfmflplpmZmZ+Z+WmWmZmZn5n5aZaZmZn8/89plpmZmcnMnGmWmZmZmZmZaZaZmZn//59plpmZmZmZ+WmWmZmZmZn5aZaZmZn5/59plpmZmZmZ+WmWmZmZmZn5aZaZmZn//89plpmZmczMnGmWmZmZmZmZaZafmZmZmZlplp+ZmZmZmWmWn5mZmZmZaZb///////9pls/MzMzMzGmWn5mZmZmZaZafmZn5/59plpyZmZ+Z+WmWmZmZn5n5aZaZmZmfmflplpmZmZ+Z+WmWmZmZ/P/PaZaZmZnJzJxplpmZmZmZmWmWmZmZmZmZaZaZmZmZmZlplv///////2mWn5n5zMzMaZafmfmcmZlplp+Z+ZyZmWmWn5n5nJmZaZb8/8+ZmZlplsnMnJmZmWmWmZmZmZmZaZaZmf////9plpmZzMzMzGmWmZmZmZmZaZaZmZn5/59plpmZmZ+Z+WmWmZmZn5n5aZaZmZmfmflplpmZmZ+Z+WmWmZmZ/P//aZaZmZnJzMxplpmZmZmZmWmWmZmZ/5+ZaZaZmZmZ+ZlplpmZmZn5mWmWmZmZmfn5aZaZmZn//89plpmZmczMnGmWmZmZmZmZaWaZmZmZmZlmZmZmZmZmZmY=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "HowToButton"
+    },
+    "image17": {
+        "data": "hwQwABAAAADu7u7u7u7u7u5ERERERETuTkRERERERORORERERERE5E5E/////0TkTvTMzMzMT+ROz0RERET85E5PRERERPTkTk9ERERE9OROT0RERET05E5MRERERMTkTkRERERERORORERE////5E5ERET0zMzkTkRERPREROROREREz0RE5E5ERERMRETkTkRERERERORORERE9P9P5E5ERERPz/zkTkRERE9P9ORORERE/E/05E5ERETETMTkTkRERERERORORERERPRP5E5EREREz/zkTkRERERP9ORORERE////5E5ERETMzMzkTkRERERERORORERET///5E5ERERMzMzkTkRERERERORORERE9ERE5E5ERET//0/kTkRERPzM/ORORERE9ET05E5ERETERMTkTkRERERERORORERE9ET05E5ERETPT/TkTkRERE9P9ORORERET/zP5E5ERERMxEzkTkRERERERORORERERERE5O5ERERERETu7u7u7u7u7u4=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "CreditsButtonSelected"
+    },
+    "image16": {
+        "data": "hwQwABAAAABmZmZmZmZmZmaZmZmZmZlmlpmZmZmZmWmWmZmZmZmZaZaZ/////5lplvnMzMzMn2mWz5mZmZn8aZafmZmZmflplp+ZmZmZ+WmWn5mZmZn5aZacmZmZmclplpmZmZmZmWmWmZmZ////aZaZmZn5zMxplpmZmfmZmWmWmZmZz5mZaZaZmZmcmZlplpmZmZmZmWmWmZmZ+f+faZaZmZmfz/xplpmZmZ+f+WmWmZmZ/J/5aZaZmZnJnMlplpmZmZmZmWmWmZmZmfmfaZaZmZmZz/xplpmZmZmf+WmWmZmZ////aZaZmZnMzMxplpmZmZmZmWmWmZmZn///aZaZmZmczMxplpmZmZmZmWmWmZmZ+ZmZaZaZmZn//59plpmZmfzM/GmWmZmZ+Zn5aZaZmZnJmclplpmZmZmZmWmWmZmZ+Zn5aZaZmZnPn/lplpmZmZ+f+WmWmZmZn/zPaZaZmZmcyZxplpmZmZmZmWmWmZmZmZmZaWaZmZmZmZlmZmZmZmZmZmY=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "CreditsButton"
+    },
+    "image18": {
+        "data": "hwQgABAAAABmZmZmZmZmZmaZmZmZmZlmlpmZmZmZmWmW////////aZbPzMzPzPxplp+ZmZ+Z+WmWn5mZn5n5aZafmZmfmflplp+ZmZ+Z+WmWn5mZnJn5aZacmZmZmclplpmZmZmZmWmWmZmZn5n5aZaZmZn5mZ9plpmZmZn/mWmWmZmZmf+ZaZaZmZn5zJ9plpmZmc+Z/GmWmZmZnJnJaZaZmZmZmZlplpmZmZ///2mWmZmZnMzMaZaZmZmZmZlplpmZmfmZmWmWmZmZ//+faZaZmZn8zPxplpmZmfmZ+WmWmZmZyZnJaZaZmZmZmZlplpmZmZmZmWlmmZmZmZmZZmZmZmZmZmZm",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "ExitButton"
+    },
+    "image19": {
+        "data": "hwQgABAAAADu7u7u7u7u7u5ERERERETuTkRERERERORO////////5E7PzMzPzPzkTk9ERE9E9OROT0RET0T05E5PRERPRPTkTk9ERE9E9OROT0RETET05E5MRERERMTkTkRERERERORORERET0T05E5ERET0RE/kTkRERET/RORORERERP9E5E5ERET0zE/kTkRERM9E/ORORERETETE5E5ERERERETkTkRERE///+RORERETMzM5E5ERERERETkTkRERPRERORORERE//9P5E5ERET8zPzkTkRERPRE9ORORERExETE5E5ERERERETkTkREREREROTuRERERERE7u7u7u7u7u7u",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "ExitButtonSelected"
+    },
+    "image20": {
+        "data": "hwQQABAAAAAAAPD//w8AAAAA8JmZDwAAAADwmZkPAAAAAPCZmQ8AAAAA8JmZDwAAAADwmZkPAAAAAPCZmQ8AAP///5mZ////n5mZmZmZafb/mZmZmZlm//CfmZmZafYPAP+ZmZlm/wAA8J+ZafYPAAAA/5lm/wAAAADwb/YPAAAAAAD//wAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "selector"
+    },
     "anim4": {
         "namespace": "myAnimations",
         "id": "anim4",

@@ -7,6 +7,8 @@ namespace SpriteKind {
     export const red_card = SpriteKind.create()
     export const ball = SpriteKind.create()
     export const heart = SpriteKind.create()
+    export const menu = SpriteKind.create()
+    export const selector = SpriteKind.create()
 }
 
 let treasure_sprite : Sprite = null
@@ -15,23 +17,101 @@ let switch_sprite : Sprite = null
 let switch_sprite_two : Sprite = null
 let heart_sprite : Sprite = null
 let ball_sprite : Sprite = null
+let play_sprite : Sprite = null
+let player_sprite : Sprite = null
+let how_to_play_sprite : Sprite = null
+let credits_sprite : Sprite = null
+let exit_sprite : Sprite = null
 let maxLevel = 4
 let current_level = 1
 let player_direction = 1
-let player_sprite : Sprite = null
 let ball_found = false
 let enemy_list : Sprite[] = []
 let changed_level = false
 let level_three_enemies_defeated = 0
 let last_pressed = 0
 let kick_cooldown_time = 500
+let menu_option = 1
+let selector_sprite : Sprite = null
+let in_menu = true
 namespace Player {
     export const player_sprite = sprites.create(assets.image`
                         tete front
                     `, SpriteKind.Player)
     info.setLife(3)
-    scene.cameraFollowSprite(Player.player_sprite)
-    controller.moveSprite(Player.player_sprite, 100, 100)
+}
+
+//  Shows the menu and it's options
+function start_menu() {
+    
+    scene.setBackgroundImage(sprites.background.cityscape)
+    Player.player_sprite.setPosition(20, 90)
+    play_sprite = sprites.create(assets.image`PlayButtonSelected`, SpriteKind.menu)
+    play_sprite.setPosition(80, 30)
+    how_to_play_sprite = sprites.create(assets.image`HowToButton`, SpriteKind.menu)
+    how_to_play_sprite.setPosition(80, 50)
+    credits_sprite = sprites.create(assets.image`CreditsButton`, SpriteKind.menu)
+    credits_sprite.setPosition(80, 70)
+    exit_sprite = sprites.create(assets.image`ExitButton`, SpriteKind.menu)
+    exit_sprite.setPosition(80, 90)
+    selector_sprite = sprites.create(assets.image`selector`, SpriteKind.selector)
+    selector_sprite.setPosition(30, 30)
+}
+
+//  Moves the selector sprite through the menu
+function select_option() {
+    
+    if (menu_option == 1) {
+        selector_sprite.setPosition(30, 30)
+        paint_menu_buttons(1)
+    } else if (menu_option == 2) {
+        selector_sprite.setPosition(30, 50)
+        paint_menu_buttons(2)
+    } else if (menu_option == 3) {
+        selector_sprite.setPosition(30, 70)
+        paint_menu_buttons(3)
+    } else if (menu_option == 4) {
+        selector_sprite.setPosition(30, 90)
+        paint_menu_buttons(4)
+    }
+    
+}
+
+//  Paints the menu buttons based on the position
+function paint_menu_buttons(menu_option: number) {
+    
+    if (menu_option == 1) {
+        play_sprite.setImage(assets.image`PlayButtonSelected`)
+        how_to_play_sprite.setImage(assets.image`HowToButton`)
+        credits_sprite.setImage(assets.image`CreditsButton`)
+        exit_sprite.setImage(assets.image`ExitButton`)
+    } else if (menu_option == 2) {
+        play_sprite.setImage(assets.image`PlayButton`)
+        how_to_play_sprite.setImage(assets.image`HowToButtonSelected`)
+        credits_sprite.setImage(assets.image`CreditsButton`)
+        exit_sprite.setImage(assets.image`ExitButton`)
+    } else if (menu_option == 3) {
+        play_sprite.setImage(assets.image`PlayButton`)
+        how_to_play_sprite.setImage(assets.image`HowToButton`)
+        credits_sprite.setImage(assets.image`CreditsButtonSelected`)
+        exit_sprite.setImage(assets.image`ExitButton`)
+    } else if (menu_option == 4) {
+        play_sprite.setImage(assets.image`PlayButton`)
+        how_to_play_sprite.setImage(assets.image`HowToButton`)
+        credits_sprite.setImage(assets.image`CreditsButton`)
+        exit_sprite.setImage(assets.image`ExitButtonSelected`)
+    }
+    
+}
+
+//  Destroy the menu sprites
+function destroy_menu() {
+    
+    selector_sprite.destroy()
+    play_sprite.destroy()
+    how_to_play_sprite.destroy()
+    credits_sprite.destroy()
+    exit_sprite.destroy()
 }
 
 //  Behavior of the Poopy enemy (follows the player and animates based in the direction they are facing)
@@ -192,21 +272,61 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed(
 })
 controller.up.onEvent(ControllerButtonEvent.Pressed, function on_up_pressed() {
     
-    animation.runImageAnimation(Player.player_sprite, assets.animation` backWalk `, 200, true)
-    Player.player_sprite.setImage(assets.image` tete back `)
-    player_direction = 1
+    if (in_menu == true) {
+        if (menu_option > 1) {
+            menu_option = menu_option - 1
+            select_option()
+        }
+        
+    } else {
+        animation.runImageAnimation(Player.player_sprite, assets.animation` backWalk `, 200, true)
+        Player.player_sprite.setImage(assets.image` tete back `)
+        player_direction = 1
+    }
+    
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function on_down_pressed() {
     
-    animation.runImageAnimation(Player.player_sprite, assets.animation`frontWalk`, 200, true)
-    Player.player_sprite.setImage(assets.image` tete front `)
-    player_direction = 2
+    if (in_menu == true) {
+        if (menu_option < 4) {
+            menu_option = menu_option + 1
+            select_option()
+        }
+        
+    } else {
+        animation.runImageAnimation(Player.player_sprite, assets.animation`frontWalk`, 200, true)
+        Player.player_sprite.setImage(assets.image` tete front `)
+        player_direction = 2
+    }
+    
 })
 //  Fires a projectile when A is pressed in the direction the player is facing
 controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     let projectileSprite: Sprite;
     
-    if (ball_found && game.runtime() - last_pressed >= kick_cooldown_time) {
+    if (in_menu == true) {
+        if (menu_option == 1) {
+            select_levels()
+            destroy_menu()
+            in_menu = false
+        } else if (menu_option == 2) {
+            game.showLongText(`How To Play
+ 
+ Joystick:
+Use the joystick to move your character around the map
+A button:
+ Once you unlock the football you can shoot your enemies with a kick attack`, DialogLayout.Full)
+        } else if (menu_option == 3) {
+            game.showLongText(`Credits
+ 
+Game made by Ivan Martinez and Joao Lopes.
+ 
+ Inspired by the greatest team in the World Real Betis Balompié!`, DialogLayout.Full)
+        } else if (menu_option == 4) {
+            
+        }
+        
+    } else if (ball_found && game.runtime() - last_pressed >= kick_cooldown_time) {
         if (player_direction == 1) {
             projectileSprite = sprites.createProjectileFromSprite(assets.image`ball idle`, Player.player_sprite, 0, -110)
             music.pewPew.play()
@@ -442,6 +562,8 @@ function create_level_one() {
     stair_sprite.setPosition(232, 200)
     switch_sprite = sprites.create(sprites.dungeon.greenSwitchUp, SpriteKind.switch_)
     switch_sprite.setPosition(136, 8)
+    scene.cameraFollowSprite(Player.player_sprite)
+    controller.moveSprite(Player.player_sprite, 100, 100)
     Player.player_sprite.setPosition(33, 188)
     create_enemies()
 }
@@ -517,7 +639,7 @@ function yellow_card_animation(yellow_card_sprite: Sprite) {
     
 }
 
-select_levels()
+// select_levels()
 //  Function to control the levels
 function select_levels() {
     
@@ -533,8 +655,9 @@ function select_levels() {
     
 }
 
+start_menu()
 info.onLifeZero(function on_life_zero() {
-    sprites.destroy(player_sprite, effects.ashes, 200)
+    sprites.destroy(Player.player_sprite, effects.ashes, 200)
     music.wawawawaa.play()
     game.gameOver(false)
 })
