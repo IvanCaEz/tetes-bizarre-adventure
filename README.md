@@ -31,10 +31,12 @@ Tete is so close to getting out of this mess, he must now fight through an arena
 ## Enemies
 ### Poopy
 Poopy is a conglomeration of excrement that gained sentience after Tete appeared in the dungeon. Its behavior consists of following Tete across the room, regardless of his location. It has a medium speed (20) and will perish upon contact with Tete, dealing one heart of damage.
+
 ![poopy_gif](https://github.com/IvanCaEz/dungeon-crawler/assets/125135728/82ba9fd8-b4b6-428e-bd46-7fca2b7e3810)
 
 ### Yellow Card
 Yellow Card is one of Tete's major adversaries in the real world, having now materialized into a monster. In the first stage of its appearance, it moves up and down with high speed (60). Similar to Poopy, it will die upon contact with Tete, causing one heart of damage.
+
 ![yellow_card_gif](https://github.com/IvanCaEz/dungeon-crawler/assets/125135728/6be7a8de-55c8-45d6-b947-8735566bbbab)
 
 
