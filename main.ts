@@ -20,10 +20,11 @@ let current_level = 1
 let player_direction = 1
 let player_sprite : Sprite = null
 let ball_found = false
-let kick_cooldown = false
 let enemy_list : Sprite[] = []
 let changed_level = false
 let level_three_enemies_defeated = 0
+let last_pressed = 0
+let kick_cooldown_time = 500
 namespace Player {
     export const player_sprite = sprites.create(assets.image`
                         tete front
@@ -33,6 +34,7 @@ namespace Player {
     controller.moveSprite(Player.player_sprite, 100, 100)
 }
 
+//  Behavior of the Poopy enemy (follows the player and animates based in the direction they are facing)
 function poopy_behavior() {
     for (let poopy of sprites.allOfKind(SpriteKind.poopy)) {
         //  follow the player
@@ -55,6 +57,7 @@ function poopy_behavior() {
     }
 }
 
+//  Generates a number enemies of type Poopy
 function generate_poopies(poopies_number: number) {
     let poopy: Sprite;
     for (let index = 0; index < poopies_number; index++) {
@@ -63,6 +66,7 @@ function generate_poopies(poopies_number: number) {
     }
 }
 
+//  Generates a number of enemies of type Red Card
 function generate_red_cards(red_cards_number: number) {
     let red_card: Sprite;
     for (let index = 0; index < red_cards_number; index++) {
@@ -72,6 +76,7 @@ function generate_red_cards(red_cards_number: number) {
     }
 }
 
+//  Generates a number of enemies of type Yellow Card
 function generate_yellow_cards(yellow_cards_number: number) {
     let yellow_card: Sprite;
     for (let index = 0; index < yellow_cards_number; index++) {
@@ -170,6 +175,7 @@ game.onUpdateInterval(1500, function on_update_interval_plus() {
     }
     
 })
+//  Changes the animation and the direction the player is facing
 controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
     
     animation.runImageAnimation(Player.player_sprite, assets.animation`walkRight`, 200, true)
@@ -196,26 +202,31 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function on_down_pressed(
     Player.player_sprite.setImage(assets.image` tete front `)
     player_direction = 2
 })
+//  Fires a projectile when A is pressed in the direction the player is facing
 controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     let projectileSprite: Sprite;
     
-    if (ball_found && kick_cooldown == false) {
+    if (ball_found && game.runtime() - last_pressed >= kick_cooldown_time) {
         if (player_direction == 1) {
             projectileSprite = sprites.createProjectileFromSprite(assets.image`ball idle`, Player.player_sprite, 0, -110)
             music.pewPew.play()
             animation.runImageAnimation(projectileSprite, assets.animation`ballAttack`, 50, true)
+            last_pressed = game.runtime()
         } else if (player_direction == 2) {
             projectileSprite = sprites.createProjectileFromSprite(assets.image`ball idle`, Player.player_sprite, 0, 110)
             music.pewPew.play()
             animation.runImageAnimation(projectileSprite, assets.animation`ballAttack`, 50, true)
+            last_pressed = game.runtime()
         } else if (player_direction == 3) {
             projectileSprite = sprites.createProjectileFromSprite(assets.image`ball idle`, Player.player_sprite, 110, 0)
             music.pewPew.play()
             animation.runImageAnimation(projectileSprite, assets.animation`ballAttack`, 50, true)
+            last_pressed = game.runtime()
         } else if (player_direction == 4) {
             projectileSprite = sprites.createProjectileFromSprite(assets.image`ball idle`, Player.player_sprite, -110, 0)
             music.pewPew.play()
             animation.runImageAnimation(projectileSprite, assets.animation`ballAttack`, 50, true)
+            last_pressed = game.runtime()
         }
         
     }
@@ -244,7 +255,7 @@ function on_overlap_tile(sprite: Sprite, location: tiles.Location) {
 
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.hazardLava0, on_overlap_tile)
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.hazardLava1, on_overlap_tile)
-//  On hit wall
+//  On hit wall interacts with the switches
 scene.onHitWall(SpriteKind.Player, function on_hit_wall(sprite: Sprite, location: tiles.Location) {
     
     if (current_level == 1) {
@@ -321,7 +332,7 @@ function create_enemies() {
         enemy_list.push(yellow_card_one)
         enemy_list.push(yellow_card_two)
         red_card_one.setPosition(25, 150)
-        red_card_two.setPosition(300, 440)
+        red_card_two.setPosition(300, 460)
         yellow_card_one.setPosition(216, 170)
         yellow_card_two.setPosition(400, 56)
     }
@@ -423,8 +434,8 @@ function create_level_one() {
     
     // music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
     scene.setTileMapLevel(tilemap`
-        level one
-    `)
+            level one
+        `)
     treasure_sprite = sprites.create(sprites.dungeon.chestClosed, SpriteKind.treasure)
     treasure_sprite.setPosition(25, 140)
     stair_sprite = sprites.create(sprites.dungeon.stairLarge, SpriteKind.goal)
@@ -480,6 +491,7 @@ function create_level_four() {
     Player.player_sprite.sayText("Finally...", 1000, null, 1, 7)
 }
 
+//  Animates the Red Card enemy and starts to follow the player
 function red_card_animation(red_card_sprite: Sprite) {
     if (Player.player_sprite.y > red_card_sprite.y) {
         animation.runImageAnimation(red_card_sprite, assets.animation`redCardFront`, 200, true)
@@ -495,6 +507,7 @@ function red_card_animation(red_card_sprite: Sprite) {
     
 }
 
+//  Animates the Yellow Card enemy 
 function yellow_card_animation(yellow_card_sprite: Sprite) {
     if (Player.player_sprite.y > yellow_card_sprite.y) {
         animation.runImageAnimation(yellow_card_sprite, assets.animation`yellowCardFront`, 200, true)
@@ -504,6 +517,8 @@ function yellow_card_animation(yellow_card_sprite: Sprite) {
     
 }
 
+select_levels()
+//  Function to control the levels
 function select_levels() {
     
     if (current_level == 1) {
@@ -523,4 +538,3 @@ info.onLifeZero(function on_life_zero() {
     music.wawawawaa.play()
     game.gameOver(false)
 })
-select_levels()

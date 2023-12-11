@@ -20,10 +20,11 @@ current_level = 1
 player_direction = 1
 player_sprite: Sprite = None
 ball_found = False
-kick_cooldown = False
 enemy_list: List[Sprite] = []
 changed_level = False
 level_three_enemies_defeated = 0
+last_pressed = 0
+kick_cooldown_time = 500
 
 @namespace
 class Player:
@@ -34,6 +35,8 @@ class Player:
     scene.camera_follow_sprite(Player.player_sprite)
     controller.move_sprite(Player.player_sprite, 100, 100)
 
+
+# Behavior of the Poopy enemy (follows the player and animates based in the direction they are facing)
 def poopy_behavior():
     for poopy in sprites.all_of_kind(SpriteKind.poopy):
         # follow the player
@@ -50,23 +53,27 @@ def poopy_behavior():
         else:
             poopy.vy = -20
 
+
+# Generates a number enemies of type Poopy
 def generate_poopies(poopies_number: int):
     for index in range(poopies_number):
         poopy = sprites.create(assets.image("""poopy left """), SpriteKind.poopy)
         poopy.set_position(Math.random_range(32, 240), Math.random_range(16, 220))
 
+# Generates a number of enemies of type Red Card
 def generate_red_cards(red_cards_number: int):
     for index in range(red_cards_number):
         red_card = sprites.create(assets.image("""redCard base """), SpriteKind.red_card)
         red_card.set_position(Math.random_range(32, 240), Math.random_range(16, 220))
         red_card_animation(red_card)
+
+# Generates a number of enemies of type Yellow Card
 def generate_yellow_cards(yellow_cards_number: int):
     for index in range(yellow_cards_number):
         yellow_card = sprites.create(assets.image("""yellowCard base """), SpriteKind.red_card)
         yellow_card.set_position(Math.random_range(32, 240), Math.random_range(10, 220))
         yellow_card_animation(yellow_card)
         yellow_card.follow(Player.player_sprite, 60, 60)
-
 
 def on_update_interval():
     global current_level, enemy_list, level_three_enemies_defeated, changed_level
@@ -128,6 +135,7 @@ def on_update_interval_plus():
             generate_poopies(1)
 game.on_update_interval(1500, on_update_interval_plus)
 
+# Changes the animation and the direction the player is facing
 def on_right_pressed():
     global player_direction
     animation.run_image_animation(Player.player_sprite, assets.animation("""walkRight"""), 200, True)
@@ -158,25 +166,30 @@ def on_down_pressed():
     player_direction = 2
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
+# Fires a projectile when A is pressed in the direction the player is facing
 def on_a_pressed():
-    global player_direction, ball_found
-    if ball_found and kick_cooldown == False:
+    global player_direction, ball_found, last_pressed, kick_cooldown_time
+    if ball_found and game.runtime() - last_pressed >= kick_cooldown_time:
         if player_direction == 1:
             projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 0, -110)
             music.pewPew.play()
             animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
+            last_pressed = game.runtime()
         elif player_direction == 2:
             projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 0, 110)
             music.pewPew.play()
             animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
+            last_pressed = game.runtime()
         elif player_direction == 3:
             projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, 110, 0)
             music.pewPew.play()
             animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
+            last_pressed = game.runtime()
         elif player_direction == 4:
             projectileSprite = sprites.createProjectileFromSprite(assets.image("""ball idle"""), Player.player_sprite, -110, 0)
             music.pewPew.play()
             animation.run_image_animation(projectileSprite, assets.animation("""ballAttack"""), 50, True)
+            last_pressed = game.runtime()
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
 # Overlap enemy on hit projectile
@@ -198,7 +211,7 @@ def on_overlap_tile(sprite, location):
 scene.on_overlap_tile(SpriteKind.player, sprites.dungeon.hazard_lava0, on_overlap_tile)
 scene.on_overlap_tile(SpriteKind.player, sprites.dungeon.hazard_lava1, on_overlap_tile)
 
-# On hit wall
+# On hit wall interacts with the switches
 def on_hit_wall(sprite, location):
     global current_level
     if current_level == 1:
@@ -261,7 +274,7 @@ def create_enemies():
         enemy_list.append(yellow_card_one)
         enemy_list.append(yellow_card_two)
         red_card_one.set_position(25,150)
-        red_card_two.set_position(300,440)
+        red_card_two.set_position(300,460)
         yellow_card_one.set_position(216,170)
         yellow_card_two.set_position(400,56)
     
@@ -349,8 +362,8 @@ def create_level_one():
     global treasure_sprite, stair_sprite, switch_sprite
     #music.play(music.create_song(assets.song("""level one bso""")),music.PlaybackMode.LOOPING_IN_BACKGROUND)
     scene.set_tile_map_level(tilemap("""
-        level one
-    """))
+            level one
+        """))
     treasure_sprite = sprites.create(sprites.dungeon.chest_closed, SpriteKind.treasure)
     treasure_sprite.set_position(25, 140)
     stair_sprite = sprites.create(sprites.dungeon.stair_large, SpriteKind.goal)
@@ -402,7 +415,7 @@ def create_level_four():
     Player.player_sprite.set_position(96,6)
     Player.player_sprite.say_text("Finally...",1000, None, 1, 7)
 
-
+# Animates the Red Card enemy and starts to follow the player
 def red_card_animation(red_card_sprite: Sprite):
     if Player.player_sprite.y > red_card_sprite.y:
         animation.run_image_animation(red_card_sprite, assets.animation("""redCardFront"""), 200, True)
@@ -413,14 +426,16 @@ def red_card_animation(red_card_sprite: Sprite):
     if chance_to_say < 20:
         red_card_sprite.say_text("HEY FOUL", 1000, None, 1, 2)
 
-
+# Animates the Yellow Card enemy 
 def yellow_card_animation(yellow_card_sprite: Sprite):
     if Player.player_sprite.y > yellow_card_sprite.y:
         animation.run_image_animation(yellow_card_sprite, assets.animation("""yellowCardFront"""), 200, True)
     else:
         animation.run_image_animation(yellow_card_sprite, assets.animation("""yellowCardBack"""), 200, True)
 
+select_levels()
 
+# Function to control the levels
 def select_levels():
     global current_level
     if current_level == 1:
@@ -437,6 +452,3 @@ def on_life_zero():
     music.wawawawaa.play()
     game.game_over(False)
 info.on_life_zero(on_life_zero)
-
-
-select_levels()
