@@ -198,7 +198,6 @@ def on_update_interval():
     elif current_level == 4:
         if Player.player_sprite.y >= 69:
             game.game_over(True)
-    print(Player.player_sprite)
 game.on_update_interval(500, on_update_interval) 
 
 # Interval for spawning poopies in floor 2

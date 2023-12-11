@@ -241,7 +241,6 @@ game.onUpdateInterval(500, function on_update_interval() {
         
     }
     
-    console.log(Player.player_sprite)
 })
 //  Interval for spawning poopies in floor 2
 game.onUpdateInterval(1500, function on_update_interval_plus() {

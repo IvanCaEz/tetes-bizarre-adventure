@@ -1,24 +1,24 @@
  
 
 
-> Abra esta pagina en [https://ivancaez.github.io/dungeon-crawler/](https://ivancaez.github.io/dungeon-crawler/)
+>To play open this page in [https://ivancaez.github.io/dungeon-crawler/](https://ivancaez.github.io/dungeon-crawler/)
 
-## Usar como extensión
+## Use as Extension
 
-Este repositorio puede ser añadido como una **extensión** en MakeCode.
+This repository can be added as an extension in MakeCode.
 
-* abra [https://arcade.makecode.com/](https://arcade.makecode.com/)
-* haga clic en **New Project**
-* haga clic en **Extensiones** en el menú del engranaje
-* buscar **https://github.com/ivancaez/dungeon-crawler** e importar
+* Open [https://arcade.makecode.com/](https://arcade.makecode.com/)
+* Click on **New Project**
+* Click on **Extensiones** under the gearwheel menu
+* Search for **https://github.com/ivancaez/dungeon-crawler** and import
 
-## Edita este proyecto ![Build status badge](https://github.com/ivancaez/dungeon-crawler/workflows/MakeCode/badge.svg)
+## Edit this project ![Build status badge](https://github.com/ivancaez/dungeon-crawler/workflows/MakeCode/badge.svg)
 
-Para editar este repositorio en MakeCode.
+To edit this repository in MakeCode.
 
-* abra [https://arcade.makecode.com/](https://arcade.makecode.com/)
-* haga clic en **Import** luego haga clic en **Import URL**
-* pegue **https://github.com/ivancaez/dungeon-crawler** y haga clic en importar
+* Open [https://arcade.makecode.com/](https://arcade.makecode.com/)
+* Click on **Import** then click on **Import URL**
+* Paste **https://github.com/ivancaez/dungeon-crawler** and click on import.
 
 ## Blocks preview
 
