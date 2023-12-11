@@ -1,4 +1,4 @@
-// Auto-generated code. Do not edit.
+// Código generado automáticamente. No editar.
 namespace myTiles {
     //% fixedInstance jres blockIdentity=images._tile
     export const transparency16 = image.ofBuffer(hex``);
@@ -32,6 +32,12 @@ namespace myTiles {
     export const tile10 = image.ofBuffer(hex``);
     //% fixedInstance jres blockIdentity=images._tile
     export const tile15 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile17 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile18 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile16 = image.ofBuffer(hex``);
 
     helpers._registerFactory("tilemap", function(name: string) {
         switch(helpers.stringTrim(name)) {
@@ -197,21 +203,6 @@ namespace myTiles {
 . 2 2 2 2 2 2 . . 2 2 2 2 2 2 . 
 . . . . . . 2 . . 2 . . . . . . 
 `, [myTiles.transparency16,sprites.dungeon.darkGroundNorthWest0,sprites.dungeon.darkGroundNorth,sprites.dungeon.darkGroundNorthEast0,sprites.dungeon.darkGroundWest,sprites.dungeon.darkGroundSouthWest0,sprites.dungeon.darkGroundEast,sprites.dungeon.darkGroundSouthEast0,sprites.dungeon.darkGroundCenter,sprites.dungeon.darkGroundSouth,sprites.dungeon.purpleInnerNorthWest,sprites.dungeon.purpleInnerNorthEast,sprites.dungeon.purpleInnerSouthWest,sprites.dungeon.purpleInnerSouthEast,sprites.dungeon.purpleOuterWest1,sprites.dungeon.purpleOuterNorthWest,sprites.dungeon.purpleOuterNorth1,sprites.dungeon.purpleOuterNorthEast,sprites.dungeon.purpleOuterEast0,sprites.dungeon.purpleOuterSouth1,sprites.dungeon.purpleOuterSouthWest,sprites.dungeon.purpleOuterWest2,sprites.dungeon.purpleOuterSouthEast,sprites.dungeon.purpleOuterEast2,sprites.dungeon.purpleOuterNorth2,sprites.dungeon.purpleOuterSouth2,sprites.dungeon.hazardLava0,sprites.dungeon.hazardLava1,sprites.dungeon.stairNorth,myTiles.tile2,myTiles.tile3,myTiles.tile4,myTiles.tile11,myTiles.tile1,myTiles.tile7,myTiles.tile8,myTiles.tile12,sprites.dungeon.purpleOuterWest0,sprites.dungeon.purpleOuterEast1,myTiles.tile9,myTiles.tile10,myTiles.tile15], TileScale.Sixteen);
-            case "level four":
-            case "nivel1":return tiles.createTilemap(hex`0c000c0009090902010303020109070407040909040a050907090709090907090908060409090409070409070907090909090909040909090907090909090407090904090909040909090907090909090909090909040909090909090909070709090909090409090409090704090909090909090909070909090904090704090707090904090909090704090904090909090909`, img`
-. . . 2 2 . . 2 2 . . . 
-. . . . . . . . . . . . 
-. . . . . . . . . . . . 
-. . . . . . . . . . . . 
-. . . . . . . . . . . . 
-. . . . . . . . . . . . 
-. . . . . . . . . . . . 
-. . . . . . . . . . . . 
-. . . . . . . . . . . . 
-. . . . . . . . . . . . 
-. . . . . . . . . . . . 
-. . . . . . . . . . . . 
-`, [myTiles.transparency16,sprites.dungeon.purpleOuterSouthWest,sprites.dungeon.purpleOuterSouthEast,sprites.dungeon.stairSouth,sprites.castle.tileGrass2,sprites.castle.tilePath6,sprites.castle.tilePath9,sprites.castle.tileGrass3,sprites.castle.tilePath7,sprites.castle.tileGrass1,sprites.castle.tilePath4], TileScale.Sixteen);
             case "level one":
             case "level one1":return tiles.createTilemap(hex`10001000010211020202030215020302110202040b070a070a070a070a070a070a070a100b08090809070c140a0809080908091213070a070a08110209070a070a070a100e08070a09080908090807140a08090f0e0710130a070a070a07081109070a100e08120b0908090809080908090809120e0708090a070a070a070a070a070a100e080908090809100b08090809071405060c0c0c0a070a1013070a070a080204010202040e0809120b080908090809100b070a1013070a100e070a070a0102040b080908090809080908070d0d0e091213070a070a070a070a07080204090a100b08090809080908090809080f080910060d140d0d0d0d140d0d0d140d0d0c05`, img`
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
@@ -231,6 +222,21 @@ namespace myTiles {
 2 . . . . . . . . . . . 2 . . 2 
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
 `, [myTiles.transparency16,sprites.dungeon.greenOuterNorthWest,sprites.dungeon.greenOuterNorth0,sprites.dungeon.greenOuterNorth1,sprites.dungeon.greenOuterNorthEast,sprites.dungeon.greenOuterSouthWest,sprites.dungeon.greenOuterSouthEast,sprites.dungeon.greenInnerNorthWest,sprites.dungeon.greenInnerSouthWest,sprites.dungeon.greenInnerSouthEast,sprites.dungeon.greenInnerNorthEast,sprites.dungeon.greenOuterWest1,sprites.dungeon.greenOuterSouth0,sprites.dungeon.greenOuterSouth1,sprites.dungeon.greenOuterWest0,sprites.dungeon.greenOuterEast1,sprites.dungeon.greenOuterEast0,sprites.dungeon.greenOuterNorth2,sprites.dungeon.greenOuterEast2,sprites.dungeon.greenOuterWest2,sprites.dungeon.greenOuterSouth2,sprites.dungeon.greenSwitchUp], TileScale.Sixteen);
+            case "level four":
+            case "nivel1":return tiles.createTilemap(hex`0c000c0009070902010303020109070407040909040a0509070907090b09070909080604090904090704090709070909090b0909040909090707090909090407090904090909040909090907090b09090909090909040909090909090909070709090909090409090409070704090b090909090909090709090909040b0704090707090904090909090704090904090909090909`, img`
+. . . 2 2 . . 2 2 . . . 
+. . . . . . . . . . . . 
+2 . . . . . . . . . . . 
+. . . . . . . . . 2 . . 
+. . . . . . . . . . . . 
+. . . . . . . . . . . . 
+. 2 . . . . . . . . . . 
+. . . . . . . . . . . . 
+. . . . . . . . . . 2 . 
+. . . . . . . . . . . . 
+2 . . . . . . . . . . . 
+. . . . . . . . . . . . 
+`, [myTiles.transparency16,sprites.dungeon.purpleOuterSouthWest,sprites.dungeon.purpleOuterSouthEast,sprites.dungeon.stairSouth,sprites.castle.tileGrass2,sprites.castle.tilePath6,sprites.castle.tilePath9,sprites.castle.tileGrass3,sprites.castle.tilePath7,sprites.castle.tileGrass1,sprites.castle.tilePath4,myTiles.tile16], TileScale.Sixteen);
         }
         return null;
     })
@@ -268,9 +274,15 @@ namespace myTiles {
             case "tile10":return tile10;
             case "myTile6":
             case "tile15":return tile15;
+            case "saplingPine":
+            case "tile17":return tile17;
+            case "saplingOak":
+            case "tile18":return tile18;
+            case "shrub":
+            case "tile16":return tile16;
         }
         return null;
     })
 
 }
-// Auto-generated code. Do not edit.
+// Código generado automáticamente. No editar.

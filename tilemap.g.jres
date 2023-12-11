@@ -94,6 +94,24 @@
         "tilemapTile": true,
         "displayName": "myTile6"
     },
+    "tile17": {
+        "data": "hwQQABAAAAB3d3fMd3d3d3d3Z8fMfHd3d3dsx3x8d3d3Z2xnd3x3d8fMx2ZmzHd+x8ZnbGZ35n7HfHfHdsfvd2xVd2xm9u7uXFV3Zmb/7u7HfHVnd8fud2fHZ2Z3d+x+Z2bHd2fMd353Z8x3d3x3d3d3Zmd8fHd3d3dnZ8Z8d3d3d3dmd3d3dw==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "saplingPine"
+    },
+    "tile18": {
+        "data": "hwQQABAAAAB3d3fMfHd3d3d3zMbMfHd3d8dmZszMd3d3x2ZnbMZ3d3dsdmdm9nx3d2x3dmf8T3fHZndnZ2b8fsdnV3fGZvzux3d3Z2fM/O7HVWdmZ/bPd2dVd2dn/Hznd3Z1Z2bG73R3xnZWZ8Z/d3fHbHbG/Hd3d3fMZsZ8d3d3d8fMzHd3dw==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "saplingOak"
+    },
+    "tile16": {
+        "data": "hwQQABAAAAB3d2ZnZnx3d3d3Zsx2xmx3d2d2bHfMZnZ3Z3Vsd1x3ZnfMdWZnVnVmx8ZVZmx3ZcZmZ3ZnzGZmfHZVZ8bMfFdmdld1xsx8V2dmZ1ZlzGZmZsfGVWdsd2V8d8x1ZmdWdcZ3Z3dsd1x3Zndndmx3zGZ2d3d2xnbGbHd3d2ZnZnx3dw==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "shrub"
+    },
     "level1": {
         "id": "level1",
         "mimeType": "application/mkcd-tilemap",
@@ -396,25 +414,6 @@
         ],
         "displayName": "level three exit"
     },
-    "nivel1": {
-        "id": "nivel1",
-        "mimeType": "application/mkcd-tilemap",
-        "data": "MTAwYzAwMGMwMDA5MDkwOTAyMDEwMzAzMDIwMTA5MDcwNDA3MDQwOTA5MDQwYTA1MDkwNzA5MDcwOTA5MDkwNzA5MDkwODA2MDQwOTA5MDQwOTA3MDQwOTA3MDkwNzA5MDkwOTA5MDkwOTA0MDkwOTA5MDkwNzA5MDkwOTA5MDQwNzA5MDkwNDA5MDkwOTA0MDkwOTA5MDkwNzA5MDkwOTA5MDkwOTA5MDkwOTA0MDkwOTA5MDkwOTA5MDkwOTA3MDcwOTA5MDkwOTA5MDQwOTA5MDQwOTA5MDcwNDA5MDkwOTA5MDkwOTA5MDkwOTA3MDkwOTA5MDkwNDA5MDcwNDA5MDcwNzA5MDkwNDA5MDkwOTA5MDcwNDA5MDkwNDA5MDkwOTA5MDkwOTAwMjAwMjIwMDIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMA==",
-        "tileset": [
-            "myTiles.transparency16",
-            "sprites.dungeon.purpleOuterSouthWest",
-            "sprites.dungeon.purpleOuterSouthEast",
-            "sprites.dungeon.stairSouth",
-            "sprites.castle.tileGrass2",
-            "sprites.castle.tilePath6",
-            "sprites.castle.tilePath9",
-            "sprites.castle.tileGrass3",
-            "sprites.castle.tilePath7",
-            "sprites.castle.tileGrass1",
-            "sprites.castle.tilePath4"
-        ],
-        "displayName": "level four"
-    },
     "level one1": {
         "id": "level one1",
         "mimeType": "application/mkcd-tilemap",
@@ -444,6 +443,26 @@
             "sprites.dungeon.greenSwitchUp"
         ],
         "displayName": "level one"
+    },
+    "nivel1": {
+        "id": "nivel1",
+        "mimeType": "application/mkcd-tilemap",
+        "data": "MTAwYzAwMGMwMDA5MDcwOTAyMDEwMzAzMDIwMTA5MDcwNDA3MDQwOTA5MDQwYTA1MDkwNzA5MDcwOTBiMDkwNzA5MDkwODA2MDQwOTA5MDQwOTA3MDQwOTA3MDkwNzA5MDkwOTBiMDkwOTA0MDkwOTA5MDcwNzA5MDkwOTA5MDQwNzA5MDkwNDA5MDkwOTA0MDkwOTA5MDkwNzA5MGIwOTA5MDkwOTA5MDkwOTA0MDkwOTA5MDkwOTA5MDkwOTA3MDcwOTA5MDkwOTA5MDQwOTA5MDQwOTA3MDcwNDA5MGIwOTA5MDkwOTA5MDkwOTA3MDkwOTA5MDkwNDBiMDcwNDA5MDcwNzA5MDkwNDA5MDkwOTA5MDcwNDA5MDkwNDA5MDkwOTA5MDkwOTAwMjAwMjIwMDIwMDAwMDAwMDAwMDAwMDAyMDAwMDAwMDAwMDAwMDAwMDAwMjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMjAwMDAwMDAwMDAwMDAyMDAwMDAwMDAwMDAwMDAwMDAwMDAwMA==",
+        "tileset": [
+            "myTiles.transparency16",
+            "sprites.dungeon.purpleOuterSouthWest",
+            "sprites.dungeon.purpleOuterSouthEast",
+            "sprites.dungeon.stairSouth",
+            "sprites.castle.tileGrass2",
+            "sprites.castle.tilePath6",
+            "sprites.castle.tilePath9",
+            "sprites.castle.tileGrass3",
+            "sprites.castle.tilePath7",
+            "sprites.castle.tileGrass1",
+            "sprites.castle.tilePath4",
+            "myTiles.tile16"
+        ],
+        "displayName": "level four"
     },
     "*": {
         "mimeType": "image/x-mkcd-f4",
