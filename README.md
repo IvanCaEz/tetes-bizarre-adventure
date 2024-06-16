@@ -46,8 +46,3 @@ Red Card is the most formidable enemy Tete will encounter, both in the real worl
 ![red_card_gif](https://github.com/IvanCaEz/dungeon-crawler/assets/125135728/c7bf801f-aab8-4b33-b8c1-037683c31095)
 
 
-
-#### Metadatos (utilizados para búsqueda, renderizado)
-
-* for PXT/arcade
-<script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
