@@ -11,7 +11,7 @@ We made a dungeon crawler like game in which our protagonist is Tete, a young (a
 ![tete_gif](https://github.com/IvanCaEz/dungeon-crawler/assets/125135728/054337a7-67c9-43a4-9ffa-637101cc3af1)
 
 
->To play open this page in [https://ivancaez.github.io/dungeon-crawler/](https://ivancaez.github.io/dungeon-crawler/)
+>To play open this page in [https://ivancaez.github.io/tetes-bizarre-adventure/](https://ivancaez.github.io/tetes-bizarre-adventure/)
 
 ## How to play
 Use the `Joystick` to move your character around the map.
@@ -46,29 +46,6 @@ Red Card is the most formidable enemy Tete will encounter, both in the real worl
 ![red_card_gif](https://github.com/IvanCaEz/dungeon-crawler/assets/125135728/c7bf801f-aab8-4b33-b8c1-037683c31095)
 
 
-## Use as Extension
-
-This repository can be added as an extension in MakeCode.
-
-* Open [https://arcade.makecode.com/](https://arcade.makecode.com/)
-* Click on **New Project**
-* Click on **Extensiones** under the gearwheel menu
-* Search for **https://github.com/ivancaez/dungeon-crawler** and import
-
-## Edit this project ![Build status badge](https://github.com/ivancaez/dungeon-crawler/workflows/MakeCode/badge.svg)
-
-To edit this repository in MakeCode.
-
-* Open [https://arcade.makecode.com/](https://arcade.makecode.com/)
-* Click on **Import** then click on **Import URL**
-* Paste **https://github.com/ivancaez/dungeon-crawler** and click on import.
-
-## Blocks preview
-
-This image shows the blocks code from the last commit in master.
-This image may take a few minutes to refresh.
-
-![A rendered view of the blocks](https://github.com/ivancaez/dungeon-crawler/raw/master/.github/makecode/blocks.png)
 
 #### Metadatos (utilizados para búsqueda, renderizado)
 
